@@ -37,6 +37,7 @@
 * Search-grid generation (assignable map tiles or sectors) and printable search packets per volunteer (instructions, last-known position, safety tips).
 * Volunteer attendance, shift scheduling.
 * Search intensity (basic, rigorous, extreme, pinpoint)
+* Group leeader can score the performance of volunteers after a search schedule
 
 **Police / Authority Tools**
 

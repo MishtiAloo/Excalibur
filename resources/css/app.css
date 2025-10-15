@@ -39,7 +39,6 @@ html {
 /* Navbar */
 .navbar {
     background-color: var(--bg-card);
-    padding: 0;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
     position: sticky;
     top: 0;
@@ -83,7 +82,10 @@ body {
     font-family: "Rajdhani", sans-serif;
     line-height: 1.8;
     transition: background-color 0.3s ease;
-    padding: 1.5rem;
+}
+
+main {
+    min-height: 80vh;
 }
 
 /* Headings */
@@ -94,10 +96,16 @@ h4,
 h5,
 h6 {
     color: var(--accent-yellow);
-    margin-bottom: 2rem;
-    margin-top: 1rem;
     transition: color 0.3s ease;
 }
+
+h1 { font-size: 2.5rem; }
+h2 { font-size: 2rem; }
+h3 { font-size: 1.75rem; }
+h4 { font-size: 1.5rem; }
+h5 { font-size: 1.25rem; }
+h6 { font-size: 1rem; }
+
 
 /* Paragraphs */
 p {
@@ -230,7 +238,6 @@ li {
 /* Header */
 header {
     text-align: center;
-    padding: 2rem 0;
     margin-bottom: 2rem;
 }
 
