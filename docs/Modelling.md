@@ -1,8 +1,6 @@
-
-
 ### **users**
 
-`user_id (PK)`, NID, name, email, phone, password_hash, permanent_location, current_location, role (enum: citizen/officer/volunteer/specialVolunteer/watchDog/group_leader), status (enum: active/suspended/inactive), info_credibility, responsiveness
+`user_id (PK)`, NID, name, email, phone, password, permanent_location (using point), current_location (point), role (enum: citizen/officer/volunteer/specialVolunteer/watchDog/group_leader), status (enum: active/suspended/inactive), info_credibility, responsiveness
 
 ---
 
@@ -20,60 +18,55 @@
 
 ### **specialVolunteers**
 
-`special_volunteer_id (PK, FK)`, terrain_type (enum: water/forest/hilltrack/urban), verified_by_officer (FK), equipment
+`special_volunteer_id (PK, FK)`, terrain_type (enum: water/forest/hilltrack/urban), verified_by_officer (FK)
 
 ---
 
 ### **skills**
 
-`skill_id (PK)`, type (enum: many things), description
+`skill_id (PK)`, type (enum: navigation, drone, boat, mountain, forest, medic, diver, canine_handler, leadership), description
 
 ---
 
 ### **user_skills**
 
-`user_id (FK)`, skill_id (FK), *(PK composite: user_id + skill_id)*, level, verified
+`user_id (FK)`, skill_id (FK), _(PK composite: user_id + skill_id)_, level, verified
 
 ---
 
-### **cases**  
+### **cases**
 
-`case_id (PK)`, created_by (FK), case_type (enum: missing/wanted/hazard/attack), title, description, area, status (enum: active/under_investigation/resolved/closed), urgency (enum: low/medium/high/critical/national)
+`case_id (PK)`, created_by (FK), case_type (enum: missing/wanted/hazard/attack), title, description, coverage_area (point), status (enum: active/under_investigation/resolved/closed), urgency (enum: low/medium/high/critical/national)
+
 ---
 
 ### **searchGroups**
 
-`group_id (PK)`, case_id (FK), leader_id (FK), type (enum: citizen/covert/terrainSpecial) intensity (enum: basic/rigorous/extreme/pinpoint), status (enum: active/paused/completed)
-
----
-
-### **searchSchedule**
-
-`group_id (PK)`, time, *(PK composite: group_id + time)*, 
+`group_id (PK)`, case_id (FK), leader_id (FK), type (enum: citizen/covert/terrainSpecial) intensity (enum: basic/rigorous/extreme/pinpoint), status (enum: active/paused/completed), allocated_time
 
 ---
 
 ### **group_members**
 
-`group_id (FK)`, volunteer_id (FK), *(PK composite: group_id + volunteer_id)*
+`group_id (FK)`, volunteer_id (FK), _(PK composite: group_id + volunteer_id)_
 
 ---
 
 ### **instructions**
 
-`instruction_id (PK)`, group_id (FK), case_id, officer_id (FK), details, map_area_ref, issued_at
+`instruction_id (PK)`, group_id (FK), case_id, officer_id (FK), details, issued_at
 
 ---
 
 ### **reports**
 
-`report_id (PK)`, case_id (FK), user_id (FK), report_type (enum: tip/evidence/sighting/hazard/attack/general), description, location, timestamp, status (enum: pending/verified/acted/dismissed)
+`report_id (PK)`, case_id (FK), user_id (FK), report_type (enum: tip/evidence/sighting/hazard/attack/general), description, location (point), timestamp, status (enum: pending/verified/ressponded/falsed/dismissed)
 
 ---
 
-### **media_reports** *(for attaching photos/videos)*
+### **media_reports** _(for attaching photos/videos/voice)_
 
-`report_id (PK)`, url (cloudinary) , uploaded_by (FK), uploaded_at, description
+`media_id (PK)`, report_id (FK), url (cloudinary), uploaded_by (FK), uploaded_at, description
 
 ---
 
@@ -115,7 +108,7 @@
 
 ### **resources**
 
-`resource_id (PK)`, name, condition (enum: new/good/moderate/old) availability (enum: available/in_use/delayed_checkout/under_maintenance)
+`resource_id (PK)`, name, stored_area (point), condition (enum: new/good/moderate/old) availability (enum: available/in_use/delayed_checkout/under_maintenance), count, availableCount
 
 ---
 
@@ -125,6 +118,6 @@
 
 ---
 
-### **notifications** *(for push alerts & reminders)*
+### **notifications** _(for push alerts & reminders)_
 
-`notification_id (PK)`, user_id (FK), type (enum: alert/assignment/update/searchPartyFormation), message
+`notification_id (PK)`, type (enum: alert/update/new_search_start), message

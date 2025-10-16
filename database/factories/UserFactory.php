@@ -27,8 +27,19 @@ class UserFactory extends Factory
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
-            'password' => static::$password ??= Hash::make('password'),
+            // per requirement, do NOT hash password
+            'password' => 'password',
             'remember_token' => Str::random(10),
+            'nid' => (string) fake()->numerify('#############'),
+            'phone' => fake()->phoneNumber(),
+            'role' => fake()->randomElement(['citizen','officer','volunteer','specialVolunteer','watchDog','group_leader']),
+            'status' => fake()->randomElement(['active','suspended','inactive']),
+            'info_credibility' => fake()->numberBetween(0, 100),
+            'responsiveness' => fake()->numberBetween(0, 100),
+            'permanent_lat' => fake()->latitude(),
+            'permanent_lng' => fake()->longitude(),
+            'current_lat' => fake()->latitude(),
+            'current_lng' => fake()->longitude(),
         ];
     }
 

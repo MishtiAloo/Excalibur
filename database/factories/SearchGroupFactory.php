@@ -1,0 +1,24 @@
+<?php
+
+namespace Database\Factories;
+
+use App\Models\SearchGroup;
+use Illuminate\Database\Eloquent\Factories\Factory;
+
+/**
+ * @extends Factory<SearchGroup>
+ */
+class SearchGroupFactory extends Factory
+{
+    protected $model = SearchGroup::class;
+
+    public function definition(): array
+    {
+        return [
+            'type' => $this->faker->randomElement(['citizen','covert','terrainSpecial']),
+            'intensity' => $this->faker->randomElement(['basic','rigorous','extreme','pinpoint']),
+            'status' => $this->faker->randomElement(['active','paused','completed']),
+            'allocated_time' => $this->faker->numberBetween(1, 240),
+        ];
+    }
+}
