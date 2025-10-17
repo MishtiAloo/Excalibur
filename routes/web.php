@@ -38,11 +38,20 @@ Route::post('/signup', [UserController::class, 'store'])->name('signup');
 
 
 // dashboard routes
-Route::get('/dashboard/officer', [officerDashboardController::class, 'onPageLoad'])->name('dashboard.officer');
+Route::get('/dashboard/officer', [officerDashboardController::class, 'showOfficerDashboard'])->name('dashboard.officer');
+Route::get('/dashboard/volunteer', [VolunteerController::class, 'showVolunteerDashboard'])->name('dashboard.volunteer');
+Route::get('/dashboard/groupleader', [SearchGroupController::class, 'showLeaderDashboard'])->name('dashboard.groupleader');
+Route::get('/dashboard/citizen', [UserController::class, 'showCitizenDashboard'])->name('dashboard.citizen');
 
 
 // profile route
 Route::middleware('auth')->group(function () {
     Route::get('/profilepage', [UserController::class, 'showProfile'])->name('profile.page');
+    Route::get('/editprofilepage', [UserController::class, 'showEditProfile'])->name('profile.edit');
 });
-Route::get('/editprofilepage', [UserController::class, 'showEditProfile'])->name('profile.edit');
+
+// apply routes
+Route::post('/apply/volunteer', [VolunteerController::class, 'applyVolunteer'])->name('volunteer.apply');
+Route::post('/apply/special-volunteer', [SpecialVolunteerController::class, 'applySpecialVolunteer'])->name('specialvolunteer.apply');
+
+

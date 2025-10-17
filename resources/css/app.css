@@ -247,12 +247,6 @@ li {
     font-size: 1.1  rem;
 }
 
-.error-messages ul {
-    list-style-type: none; /* remove bullets */
-    padding-left: 0;
-    margin: 0;
-}
-
 /* success messsage */
 .success-message {
     background-color: #d4edda; /* light green background */

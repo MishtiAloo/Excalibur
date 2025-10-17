@@ -40,6 +40,20 @@ class VolunteerController extends Controller
             'availability' => 'nullable|string|in:available,busy,inactive',
         ]);
 
+        // For verify buttons
+        if ($request->action === 'approve') {
+            $data['vetting_status'] = 'approved';
+
+            // ✅ Update the user's role
+            if ($volunteer->user) {
+                $volunteer->user->role = 'volunteer';
+                $volunteer->user->save();
+            }
+
+        } elseif ($request->action === 'reject') {
+            $data['vetting_status'] = 'rejected';
+        }
+
         try {
             $volunteer->update($data);
             return response()->json($volunteer);
@@ -47,6 +61,7 @@ class VolunteerController extends Controller
             return response()->json(['error' => 'Failed to update volunteer'], 400);
         }
     }
+
 
     public function destroy(Volunteer $volunteer)
     {
@@ -56,5 +71,27 @@ class VolunteerController extends Controller
         } catch (\Throwable $e) {
             return response()->json(['error' => 'Failed to delete volunteer'], 400);
         }
+    }
+
+    //apply volunteer function to add volunteer id as user id, vetting status as pending and availability as available
+    public function applyVolunteer(Request $request)
+    {
+        $data = $request->validate([
+            'volunteer_id' => 'required|exists:users,id|unique:volunteers,volunteer_id',
+        ]);
+        try {
+            $data['vetting_status'] = 'pending';
+            $data['availability'] = 'available';
+            $volunteer = Volunteer::create($data);
+            return redirect()->back()->with('success', 'Volunteer application submitted successfully!');
+        } catch (\Throwable $e) {
+            return redirect()->back()->withErrors(['error' => 'Failed to apply as Volunteer']);
+        }
+    }
+
+    //showvolunteerdashboard
+    public function showVolunteerDashboard()
+    {
+        return view('volunteers.dashboard');    
     }
 }

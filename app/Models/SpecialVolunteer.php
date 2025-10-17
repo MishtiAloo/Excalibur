@@ -13,7 +13,7 @@ class SpecialVolunteer extends Model
     public $incrementing = false;
     protected $keyType = 'int';
 
-    protected $fillable = ['special_volunteer_id','terrain_type','verified_by_officer'];
+    protected $fillable = ['special_volunteer_id','terrain_type','vetting_status','verified_by_officer'];
 
     public function volunteer()
     {

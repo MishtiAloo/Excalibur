@@ -16,6 +16,7 @@ class SpecialVolunteerFactory extends Factory
     {
         return [
             'terrain_type' => $this->faker->randomElement(['water','forest','hilltrack','urban']),
+            'vetting_status' => $this->faker->randomElement(['pending','approved','rejected']),
             'verified_by_officer' => null,
         ];
     }

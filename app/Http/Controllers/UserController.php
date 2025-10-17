@@ -130,7 +130,7 @@ class UserController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect('/login');
+        return redirect()->route('login');
     }
 
     public function showSignupForm()
@@ -148,5 +148,10 @@ class UserController extends Controller
         return view('Profile.editProfilePage')->with('user', Auth::user());
     }
 
+    // Citizen dashboard
+    public function showCitizenDashboard()
+    {
+        return view('citizens.dashboard'); 
+    }
 
 }

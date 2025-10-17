@@ -12,33 +12,51 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Users (<=10)
-        $users = User::factory(10)->create();
+        // Create 20 users
+        $users = User::factory(20)->create();
 
-        // Officers (subset of users)
-        $officerUsers = $users->take(3);
+        // Assign roles
+        // Officers (first 4)
+        $officerUsers = $users->take(4);
         foreach ($officerUsers as $u) {
             $u->role = 'officer';
             $u->save();
             Officer::factory()->create(['officer_id' => $u->id]);
         }
 
-        // Volunteers (subset of users)
-        $volunteerUsers = $users->slice(3, 5);
+        // Volunteers (next 6)
+        $volunteerUsers = $users->slice(4, 6);
         foreach ($volunteerUsers as $u) {
             $u->role = 'volunteer';
             $u->save();
             Volunteer::factory()->create(['volunteer_id' => $u->id]);
         }
 
-        // Special volunteers (<=2)
-        $specials = collect();
-        foreach ($volunteerUsers->take(2) as $u) {
-            $specials->push(SpecialVolunteer::factory()->create([
+        // Special Volunteers (subset of volunteers, up to 3)
+        $specialUsers = $volunteerUsers->take(3);
+        foreach ($specialUsers as $u) {
+            $u->role = 'specialVolunteer';
+            $u->save();
+            SpecialVolunteer::factory()->create([
                 'special_volunteer_id' => $u->id,
                 'verified_by_officer' => optional($officerUsers->random())->id,
-            ]));
+            ]);
         }
+
+        // Group leaders (next 3)
+        $groupLeaders = $users->slice(10, 3);
+        foreach ($groupLeaders as $u) {
+            $u->role = 'group_leader';
+            $u->save();
+        }
+
+        // Remaining users are citizens
+        $citizens = $users->slice(13);
+        foreach ($citizens as $u) {
+            $u->role = 'citizen';
+            $u->save();
+        }
+
 
         // Skills
         $skills = Skill::factory(6)->create();

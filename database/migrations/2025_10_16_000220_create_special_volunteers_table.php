@@ -10,6 +10,7 @@ return new class extends Migration {
         Schema::create('special_volunteers', function (Blueprint $table) {
             $table->unsignedBigInteger('special_volunteer_id')->primary(); // FK to volunteers
             $table->string('terrain_type'); // water/forest/hilltrack/urban
+            $table->string('vetting_status')->default('pending'); // pending/approved/rejected
             $table->unsignedBigInteger('verified_by_officer')->nullable();
             $table->timestamps();
 
