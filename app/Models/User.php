@@ -21,6 +21,16 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'nid',
+        'phone',
+        'role',
+        'status',
+        'info_credibility',
+        'responsiveness',
+        'permanent_lat',
+        'permanent_lng',
+        'current_lat',
+        'current_lng',
     ];
 
     /**
@@ -42,7 +52,56 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
-            'password' => 'hashed',
         ];
+    }
+
+    // Relationships
+    public function officer()
+    {
+        return $this->hasOne(Officer::class, 'officer_id', 'id');
+    }
+
+    public function volunteer()
+    {
+        return $this->hasOne(Volunteer::class, 'volunteer_id', 'id');
+    }
+
+    public function cases()
+    {
+        return $this->hasMany(CaseFile::class, 'created_by');
+    }
+
+    public function searchGroupsLed()
+    {
+        return $this->hasMany(SearchGroup::class, 'leader_id');
+    }
+
+    public function reports()
+    {
+        return $this->hasMany(Report::class);
+    }
+
+    public function skills()
+    {
+    return $this->belongsToMany(
+        Skill::class,
+        'user_skills',      // pivot table
+        'user_id',          // FK on pivot referencing users
+        'skill_id',         // FK on pivot referencing skills
+        'id',               // local key on users
+        'skill_id'          // related key on skills
+        )
+            ->withPivot(['level', 'verified'])
+            ->withTimestamps();
+    }
+
+    public function resourceBookings()
+    {
+        return $this->hasMany(ResourceBooking::class, 'checked_out_by');
+    }
+
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class);
     }
 }
