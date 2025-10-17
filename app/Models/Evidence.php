@@ -9,6 +9,7 @@ class Evidence extends Model
 {
     use HasFactory;
 
+    protected $table = 'evidences';
     protected $primaryKey = 'report_id';
     public $incrementing = false;
     protected $keyType = 'int';

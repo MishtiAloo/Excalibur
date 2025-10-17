@@ -83,7 +83,14 @@ class User extends Authenticatable
 
     public function skills()
     {
-        return $this->belongsToMany(Skill::class, 'user_skills')
+    return $this->belongsToMany(
+        Skill::class,
+        'user_skills',      // pivot table
+        'user_id',          // FK on pivot referencing users
+        'skill_id',         // FK on pivot referencing skills
+        'id',               // local key on users
+        'skill_id'          // related key on skills
+        )
             ->withPivot(['level', 'verified'])
             ->withTimestamps();
     }

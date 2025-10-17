@@ -17,6 +17,18 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            // Domain fields consolidated here so only one users table definition exists
+            $table->string('nid')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('role')->default('citizen'); // citizen/officer/volunteer/specialVolunteer/group_leader
+            $table->string('status')->default('active'); // active/suspended/inactive
+            $table->unsignedTinyInteger('info_credibility')->default(0);
+            $table->unsignedTinyInteger('responsiveness')->default(0);
+            // Locations stored as lat/lng pairs
+            $table->decimal('permanent_lat', 10, 7)->nullable();
+            $table->decimal('permanent_lng', 10, 7)->nullable();
+            $table->decimal('current_lat', 10, 7)->nullable();
+            $table->decimal('current_lng', 10, 7)->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

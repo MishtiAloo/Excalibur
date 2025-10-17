@@ -1,8 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\{UserController, CaseFileController, SearchGroupController, ReportController, OfficerController, VolunteerController, SpecialVolunteerController, SkillController, InstructionController, AlertController, MediaReportController, ResourceItemController, ResourceBookingController, NotificationController};
-use App\Http\Controllers\{TipController, EvidenceController, SightingController, HazardController, AttackController};
+use App\Http\Controllers\{UserController, CaseFileController, SearchGroupController, ReportController, OfficerController, VolunteerController, SpecialVolunteerController, SkillController, InstructionController, AlertController, MediaReportController, ResourceItemController, ResourceBookingController, NotificationController,TipController, EvidenceController, SightingController, HazardController, AttackController, officerDashboardController};
 
 Route::get('/', function () {
     return view('welcome');
@@ -28,3 +27,22 @@ Route::resource('media-reports', MediaReportController::class)->parameters(['med
 Route::resource('resources', ResourceItemController::class)->names('resources');
 Route::resource('resource-bookings', ResourceBookingController::class)->parameters(['resource-bookings' => 'resource_booking'])->names('resource_bookings');
 Route::resource('notifications', NotificationController::class)->names('notifications');
+
+// auth routes
+// for auth redirect to find correct login route route (had to rename it to login)
+Route::get('/loginform', [UserController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [UserController::class, 'login'])->name('login.submit');
+Route::post('/logout', [UserController::class, 'logout'])->name('logout');  
+Route::get('/signupform', [UserController::class, 'showSignupForm'])->name('signupform');
+Route::post('/signup', [UserController::class, 'store'])->name('signup');
+
+
+// dashboard routes
+Route::get('/dashboard/officer', [officerDashboardController::class, 'onPageLoad'])->name('dashboard.officer');
+
+
+// profile route
+Route::middleware('auth')->group(function () {
+    Route::get('/profilepage', [UserController::class, 'showProfile'])->name('profile.page');
+});
+Route::get('/editprofilepage', [UserController::class, 'showEditProfile'])->name('profile.edit');
