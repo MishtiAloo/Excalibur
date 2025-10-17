@@ -10,6 +10,9 @@
 
     {{-- Load Vite assets (dev + prod) --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    {{-- Google Maps API --}}
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC7jztxro2FA6I2X7farGVYbPwiLOSWeaA&callback=initMap" async defer></script>
 </head>
 <body>
     {{-- Navbar based on app.css styles --}}
@@ -51,5 +54,7 @@
             <p>&copy; {{ date('Y') }} Excalibur. All rights reserved.</p>
         </div>
     </footer>
+
+    @yield('scripts')
 </body>
 </html>
