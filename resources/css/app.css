@@ -306,3 +306,77 @@ section {
         width: 100%;
     }
 }
+
+
+/* table css */
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 2rem;
+    background-color: var(--bg-card);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    animation: fadeIn 0.4s ease-in-out;
+}
+
+th, td {
+    padding: 0.9rem 1.2rem;
+    text-align: left;
+}
+
+th {
+    background-color: var(--accent-yellow);
+    color: var(--text-dark);
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.95rem;
+    letter-spacing: 0.5px;
+}
+
+td {
+    background-color: var(--bg-dark);
+    color: var(--text-light);
+    border-bottom: 1px solid var(--bg-gray);
+    font-size: 0.95rem;
+    transition: background-color 0.3s ease;
+}
+
+/* Hover effect for rows */
+tr:hover td {
+    background-color: rgba(255, 235, 59, 0.1);
+}
+
+/* Alternate row shading */
+tr:nth-child(even) td {
+    background-color: #1a1a1a;
+}
+
+/* Rounded corners for first and last cells */
+table tr:first-child th:first-child {
+    border-top-left-radius: 12px;
+}
+table tr:first-child th:last-child {
+    border-top-right-radius: 12px;
+}
+
+/* Action buttons inside table */
+table button {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
+    border-radius: 6px;
+}
+
+table button:hover {
+    transform: translateY(-2px);
+}
+
+/* Responsive: horizontal scroll for smaller screens */
+@media (max-width: 768px) {
+    table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+}

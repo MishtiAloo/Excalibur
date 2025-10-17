@@ -7,6 +7,7 @@
     <h2>Welcome officer</h2>
 
     {{-- table for pending volunteer applications --}}
+    <h2>Pending Volunteer Applications</h2>
     <table>
         <tr>
             <th>Name</th>
@@ -33,6 +34,7 @@
     </table>
         
     {{-- table for pending special volunteer applications --}}
+    <h2>Pending Special Volunteer Applications</h2>
     <table>
         <tr>
             <th>Name</th>
