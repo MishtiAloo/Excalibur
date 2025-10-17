@@ -37,7 +37,7 @@ class UserController extends Controller
             $data['password'] = Hash::make($data['password']);
 
             $user = User::create($data);
-            return redirect()->route('loginform')->with('success', 'Account created successfully!');
+            return redirect()->route('login')->with('success', 'Account created successfully!');
         } catch (\Throwable $e) {
             return response()->json(['error' => 'Failed to create user'], 400);
         }
@@ -122,7 +122,7 @@ class UserController extends Controller
             }
         }
         else {
-            return redirect()->route('loginform')->withErrors(['Invalid credentials']);
+            return redirect()->route('login')->withErrors(['Invalid credentials']);
         }
     }
 
@@ -130,7 +130,7 @@ class UserController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect('/loginform');
+        return redirect('/login');
     }
 
     public function showSignupForm()
