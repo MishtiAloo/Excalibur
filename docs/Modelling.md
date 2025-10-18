@@ -30,13 +30,13 @@
 
 ### **user_skills**
 
-`user_id (FK)`, skill_id (FK), _(PK composite: user_id + skill_id)_, level, verified
+`user_id (FK)`, skill*id (FK), *(PK composite: user*id + skill_id)*, level, verified
 
 ---
 
 ### **cases**
 
-`case_id (PK)`, created_by (FK), case_type (enum: missing/wanted/hazard/attack), title, description, coverage_area (point), status (enum: active/under_investigation/resolved/closed), urgency (enum: low/medium/high/critical/national)
+`case_id (PK)`, created_by (FK), case_type (enum: missing), title, description, coverage_area (point), status (enum: active/under_investigation/resolved/closed), urgency (enum: low/medium/high/critical/national)
 
 ---
 
@@ -48,7 +48,7 @@
 
 ### **group_members**
 
-`group_id (FK)`, volunteer_id (FK), _(PK composite: group_id + volunteer_id)_
+`group_id (FK)`, volunteer*id (FK), *(PK composite: group*id + volunteer_id)*
 
 ---
 

@@ -68,7 +68,7 @@ class DatabaseSeeder extends Seeder
         }
 
         // Cases (<=5)
-        $cases = CaseFile::factory(5)->create([
+        $cases = CaseFile::factory(10)->create([
             'created_by' => $users->random()->id,
         ]);
 

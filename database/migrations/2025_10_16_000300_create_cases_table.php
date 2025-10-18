@@ -10,7 +10,7 @@ return new class extends Migration {
         Schema::create('cases', function (Blueprint $table) {
             $table->id('case_id');
             $table->unsignedBigInteger('created_by');
-            $table->string('case_type'); // missing/wanted/hazard/attack
+            $table->string('case_type'); // missing
             $table->string('title');
             $table->text('description')->nullable();
             $table->decimal('coverage_lat', 10, 7)->nullable();

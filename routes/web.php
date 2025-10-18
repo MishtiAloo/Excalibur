@@ -54,4 +54,8 @@ Route::middleware('auth')->group(function () {
 Route::post('/apply/volunteer', [VolunteerController::class, 'applyVolunteer'])->name('volunteer.apply');
 Route::post('/apply/special-volunteer', [SpecialVolunteerController::class, 'applySpecialVolunteer'])->name('specialvolunteer.apply');
 
+// case routes
+Route::get('/dashboard/officer/show-create-page', [officerDashboardController::class, 'showCreatePage'])->name('cases.showCreatePage');
+// Route::get('/cases/show-edit-page/{case}', [CaseFileController::class, 'showEditPage'])->name('cases.showEditPage');
+
 

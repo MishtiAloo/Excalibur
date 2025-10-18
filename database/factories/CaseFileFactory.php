@@ -15,7 +15,7 @@ class CaseFileFactory extends Factory
     public function definition(): array
     {
         return [
-            'case_type' => $this->faker->randomElement(['missing','wanted','hazard','attack']),
+            'case_type' => $this->faker->randomElement(['missing']),
             'title' => $this->faker->sentence(3),
             'description' => $this->faker->paragraph(),
             'coverage_lat' => $this->faker->latitude(),
