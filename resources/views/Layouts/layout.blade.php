@@ -20,19 +20,22 @@
         <div class="container">
             <a href="{{ url('/') }}" class="navbar-brand">Excalibur</a>
             <ul class="navbar-nav">
-                <li><a href="{{ url('/') }}">Home</a></li>
+                <li><a href="{{ route('dashboardRouting') }}">Home</a></li>
                 <li><a href="#features">Alerts</a></li>
                 <li><a href="#contact">Contact</a></li>
                 <li><a href="{{ route('profile.page') }}">Profile</a></li>
             </ul>
 
             @guest
-                <form method="GET" style="all: unset;" action="{{ route('login') }}">
-                    <button type="submit" style="background-color: rgb(90, 90, 233)">Login</button>
-                </form>
-                <form method="GET" style="all: unset;" action="{{ route('signupform') }}">
-                    <button type="submit" style="background-color: rgb(48, 221, 48)">SignUp</button>
-                </form>
+                <div>
+                    <form method="GET" style="all: unset;" action="{{ route('login') }}">
+                        <button type="submit" style="background-color: rgb(90, 90, 233)">Login</button>
+                    </form>
+                    <form method="GET" style="all: unset;" action="{{ route('signupform') }}">
+                        <button type="submit" style="background-color: rgb(48, 221, 48)">SignUp</button>
+                    </form>
+                </div>
+
             @endguest
 
             @auth

@@ -22,6 +22,7 @@ class CaseFileController extends Controller
             'description' => 'nullable|string',
             'coverage_lat' => 'nullable|numeric|between:-90,90',
             'coverage_lng' => 'nullable|numeric|between:-180,180',
+            'coverage_radius' => 'nullable|integer|min:0',
             'status' => 'nullable|string|in:active,under_investigation,resolved,closed',
             'urgency' => 'nullable|string|in:low,medium,high,critical,national',
         ]);
@@ -53,6 +54,7 @@ class CaseFileController extends Controller
             'description' => 'nullable|string',
             'coverage_lat' => 'nullable|numeric|between:-90,90',
             'coverage_lng' => 'nullable|numeric|between:-180,180',
+            'coverage_radius' => 'nullable|integer|min:0',
             'status' => 'nullable|string|in:active,under_investigation,resolved,closed',
             'urgency' => 'nullable|string|in:low,medium,high,critical,national',
         ]);

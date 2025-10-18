@@ -22,11 +22,6 @@ class Officer extends Model
         return $this->belongsTo(User::class, 'officer_id', 'id');
     }
 
-    public function instructions()
-    {
-        return $this->hasMany(Instruction::class, 'officer_id');
-    }
-
     public function verifiedSpecialVolunteers()
     {
         return $this->hasMany(SpecialVolunteer::class, 'verified_by_officer');

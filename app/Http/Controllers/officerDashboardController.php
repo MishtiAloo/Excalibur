@@ -19,4 +19,8 @@ class officerDashboardController extends Controller
     public function showCreatePage() {
         return view('officers.addCase');
     }
+
+    public function showEditPage(CaseFile $case) {
+        return view('officers.editCase', compact('case'));
+    }
 }

@@ -12,9 +12,13 @@ return new class extends Migration {
             $table->unsignedBigInteger('case_id');
             $table->unsignedBigInteger('leader_id');
             $table->string('type'); // citizen/covert/terrainSpecial
-            $table->string('intensity')->default('basic'); // basic/rigorous/extreme/pinpoint
+            $table->string('intensity')->default('basic'); // basic/rigorous/extreme
             $table->string('status')->default('active'); // active/paused/completed
             $table->unsignedInteger('allocated_time')->nullable();
+            $table->string('instruction')->nullable();
+            $table->decimal('allocated_lat', 10, 7)->nullable();
+            $table->decimal('allocated_lng', 10, 7)->nullable();
+            $table->unsignedInteger('radius')->nullable();
             $table->timestamps();
 
             $table->foreign('case_id')->references('case_id')->on('cases')->cascadeOnDelete();

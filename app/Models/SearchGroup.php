@@ -11,7 +11,10 @@ class SearchGroup extends Model
 
     protected $table = 'search_groups';
     protected $primaryKey = 'group_id';
-    protected $fillable = ['case_id','leader_id','type','intensity','status','allocated_time'];
+    protected $fillable = [
+        'case_id','leader_id','type','intensity','status','allocated_time',
+        'instruction','allocated_lat','allocated_lng','radius'
+    ];
 
     public function caseFile()
     {
@@ -26,11 +29,6 @@ class SearchGroup extends Model
     public function volunteers()
     {
         return $this->belongsToMany(Volunteer::class, 'group_members', 'group_id', 'volunteer_id');
-    }
-
-    public function instructions()
-    {
-        return $this->hasMany(Instruction::class, 'group_id');
     }
 
     public function resourceBookings()

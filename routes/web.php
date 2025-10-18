@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\{UserController, CaseFileController, SearchGroupController, ReportController, OfficerController, VolunteerController, SpecialVolunteerController, SkillController, InstructionController, AlertController, MediaReportController, ResourceItemController, ResourceBookingController, NotificationController,TipController, EvidenceController, SightingController, HazardController, AttackController, officerDashboardController};
+use App\Http\Controllers\{UserController, CaseFileController, SearchGroupController, ReportController, OfficerController, VolunteerController, SpecialVolunteerController, SkillController, AlertController, MediaReportController, ResourceItemController, ResourceBookingController, NotificationController, officerDashboardController};
 
 Route::get('/', function () {
     return view('welcome');
@@ -12,16 +12,10 @@ Route::resource('users', UserController::class)->names('users');
 Route::resource('cases', CaseFileController::class)->parameters(['cases' => 'case'])->names('cases');
 Route::resource('search-groups', SearchGroupController::class)->parameters(['search-groups' => 'search_group'])->names('search_groups');
 Route::resource('reports', ReportController::class)->names('reports');
-Route::resource('tips', TipController::class)->names('tips');
-Route::resource('evidences', EvidenceController::class)->names('evidences');
-Route::resource('sightings', SightingController::class)->names('sightings');
-Route::resource('hazards', HazardController::class)->names('hazards');
-Route::resource('attacks', AttackController::class)->names('attacks');
 Route::resource('officers', OfficerController::class)->names('officers');
 Route::resource('volunteers', VolunteerController::class)->names('volunteers');
 Route::resource('special-volunteers', SpecialVolunteerController::class)->parameters(['special-volunteers' => 'special_volunteer'])->names('special_volunteers');
 Route::resource('skills', SkillController::class)->names('skills');
-Route::resource('instructions', InstructionController::class)->names('instructions');
 Route::resource('alerts', AlertController::class)->names('alerts');
 Route::resource('media-reports', MediaReportController::class)->parameters(['media-reports' => 'media_report'])->names('media_reports');
 Route::resource('resources', ResourceItemController::class)->names('resources');
@@ -42,6 +36,7 @@ Route::get('/dashboard/officer', [officerDashboardController::class, 'showOffice
 Route::get('/dashboard/volunteer', [VolunteerController::class, 'showVolunteerDashboard'])->name('dashboard.volunteer');
 Route::get('/dashboard/groupleader', [SearchGroupController::class, 'showLeaderDashboard'])->name('dashboard.groupleader');
 Route::get('/dashboard/citizen', [UserController::class, 'showCitizenDashboard'])->name('dashboard.citizen');
+Route::get('/dashboard', [UserController::class, 'routeToDashboard'])->name('dashboardRouting');
 
 
 // profile route
@@ -56,6 +51,6 @@ Route::post('/apply/special-volunteer', [SpecialVolunteerController::class, 'app
 
 // case routes
 Route::get('/dashboard/officer/show-create-page', [officerDashboardController::class, 'showCreatePage'])->name('cases.showCreatePage');
-// Route::get('/cases/show-edit-page/{case}', [CaseFileController::class, 'showEditPage'])->name('cases.showEditPage');
+Route::get('/cases/show-edit-page/{case}', [officerDashboardController::class, 'showEditPage'])->name('cases.showEditPage');
 
 

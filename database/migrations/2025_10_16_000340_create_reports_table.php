@@ -11,10 +11,11 @@ return new class extends Migration {
             $table->id('report_id');
             $table->unsignedBigInteger('case_id');
             $table->unsignedBigInteger('user_id');
-            $table->string('report_type'); // tip/evidence/sighting/hazard/attack/general
+            $table->string('report_type'); // evidence/sighting/general
             $table->text('description')->nullable();
             $table->decimal('location_lat', 10, 7)->nullable();
             $table->decimal('location_lng', 10, 7)->nullable();
+            $table->string('sighted_person')->nullable();
             $table->timestamp('timestamp')->nullable();
             $table->string('status')->default('pending'); // pending/verified/ressponded/falsed/dismissed
             $table->timestamps();

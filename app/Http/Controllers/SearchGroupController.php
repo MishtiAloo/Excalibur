@@ -18,9 +18,13 @@ class SearchGroupController extends Controller
             'case_id' => 'required|exists:cases,case_id',
             'leader_id' => 'required|exists:users,id',
             'type' => 'required|string|in:citizen,covert,terrainSpecial',
-            'intensity' => 'nullable|string|in:basic,rigorous,extreme,pinpoint',
+            'intensity' => 'nullable|string|in:basic,rigorous,extreme',
             'status' => 'nullable|string|in:active,paused,completed',
             'allocated_time' => 'nullable|integer|min:0',
+            'instruction' => 'nullable|string',
+            'allocated_lat' => 'nullable|numeric|between:-90,90',
+            'allocated_lng' => 'nullable|numeric|between:-180,180',
+            'radius' => 'nullable|integer|min:0',
         ]);
         try {
             $sg = SearchGroup::create($data);
@@ -39,9 +43,13 @@ class SearchGroupController extends Controller
     {
         $data = $request->validate([
             'type' => 'sometimes|string|in:citizen,covert,terrainSpecial',
-            'intensity' => 'nullable|string|in:basic,rigorous,extreme,pinpoint',
+            'intensity' => 'nullable|string|in:basic,rigorous,extreme',
             'status' => 'nullable|string|in:active,paused,completed',
             'allocated_time' => 'nullable|integer|min:0',
+            'instruction' => 'nullable|string',
+            'allocated_lat' => 'nullable|numeric|between:-90,90',
+            'allocated_lng' => 'nullable|numeric|between:-180,180',
+            'radius' => 'nullable|integer|min:0',
         ]);
         try {
             $search_group->update($data);

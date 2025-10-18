@@ -16,9 +16,13 @@ class SearchGroupFactory extends Factory
     {
         return [
             'type' => $this->faker->randomElement(['citizen','covert','terrainSpecial']),
-            'intensity' => $this->faker->randomElement(['basic','rigorous','extreme','pinpoint']),
+            'intensity' => $this->faker->randomElement(['basic','rigorous','extreme']),
             'status' => $this->faker->randomElement(['active','paused','completed']),
             'allocated_time' => $this->faker->numberBetween(1, 240),
+            'instruction' => $this->faker->optional()->sentence(),
+            'allocated_lat' => $this->faker->optional()->latitude(),
+            'allocated_lng' => $this->faker->optional()->longitude(),
+            'radius' => $this->faker->optional()->numberBetween(50, 5000),
         ];
     }
 }

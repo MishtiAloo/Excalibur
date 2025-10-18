@@ -12,7 +12,7 @@ class CaseFile extends Model
     protected $table = 'cases';
     protected $primaryKey = 'case_id';
     protected $fillable = [
-        'created_by','case_type','title','description','coverage_lat','coverage_lng','status','urgency'
+        'created_by','case_type','title','description','coverage_lat','coverage_lng','coverage_radius','status','urgency'
     ];
 
     public function creator()
@@ -30,10 +30,6 @@ class CaseFile extends Model
         return $this->hasMany(Report::class, 'case_id');
     }
 
-    public function instructions()
-    {
-        return $this->hasMany(Instruction::class, 'case_id');
-    }
 
     public function alerts()
     {

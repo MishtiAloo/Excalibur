@@ -15,6 +15,7 @@ return new class extends Migration {
             $table->text('description')->nullable();
             $table->decimal('coverage_lat', 10, 7)->nullable();
             $table->decimal('coverage_lng', 10, 7)->nullable();
+            $table->unsignedInteger('coverage_radius')->nullable();
             $table->string('status')->default('active'); // active/under_investigation/resolved/closed
             $table->string('urgency')->default('medium'); // low/medium/high/critical/national
             $table->timestamps();

@@ -15,10 +15,11 @@ class ReportFactory extends Factory
     public function definition(): array
     {
         return [
-            'report_type' => $this->faker->randomElement(['tip','evidence','sighting','hazard','attack','general']),
+            'report_type' => $this->faker->randomElement(['evidence','sighting','general']),
             'description' => $this->faker->sentence(),
             'location_lat' => $this->faker->latitude(),
             'location_lng' => $this->faker->longitude(),
+            'sighted_person' => $this->faker->optional()->name(),
             'timestamp' => now(),
             'status' => $this->faker->randomElement(['pending','verified','ressponded','falsed','dismissed']),
         ];

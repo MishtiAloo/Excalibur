@@ -97,8 +97,6 @@
 @endsection
 
 @section('scripts')
-    {{-- Google Maps API
-    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap" async defer></script> --}}
 
     <script>
         let map;

@@ -39,7 +39,7 @@ class UserController extends Controller
             $user = User::create($data);
             return redirect()->route('login')->with('success', 'Account created successfully!');
         } catch (\Throwable $e) {
-            return response()->json(['error' => 'Failed to create user'], 400);
+            return redirect()->route('login')->withErrors(['error' => 'Failed to create user']);
         }
     }
 
@@ -93,6 +93,27 @@ class UserController extends Controller
         }
     }
 
+    // Route to appropriate dashboard based on role
+    public function routeToDashboard()
+    {
+        $user = Auth::user();
+        if ($user->role == 'officer') {
+            return redirect()->route('dashboard.officer');
+        }
+        elseif ($user->role == 'volunteer') {
+            return redirect()->route('dashboard.volunteer');
+        }
+        elseif ($user->role == 'group_leader') {
+            return redirect()->route('dashboard.groupleader');
+        }
+        elseif ($user->role == 'citizen') {
+            return redirect()->route('dashboard.citizen');
+        }
+        else {
+            return redirect()->route('login');
+        }
+    }
+
     public function showLoginForm()
     {
         return view('auth.login');
@@ -105,21 +126,8 @@ class UserController extends Controller
         if (Auth::attempt($credentials, $remember)) {
             $user = Auth::user();
 
-            if ($user->role == 'officer') {
-                return redirect()->route('dashboard.officer');
-            }
-            elseif ($user->role == 'volunteer') {
-                return redirect()->route('dashboard.volunteer');
-            }
-            elseif ($user->role == 'group_leader') {
-                return redirect()->route('dashboard.leader');
-            }
-            elseif ($user->role == 'specialVolunteer') {
-                return redirect()->route('dashboard.specialVolunteer');
-            }
-            elseif ($user->role == 'citizen') {
-                return redirect()->route('dashboard.citizen');
-            }
+            $request->session()->regenerate();
+            return $this->routeToDashboard();
         }
         else {
             return redirect()->route('login')->withErrors(['Invalid credentials']);
@@ -153,5 +161,7 @@ class UserController extends Controller
     {
         return view('citizens.dashboard'); 
     }
+
+
 
 }

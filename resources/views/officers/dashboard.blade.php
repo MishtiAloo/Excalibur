@@ -72,6 +72,7 @@
             <th>Title</th>
             <th>Description</th>
             <th>Coverage Location</th>
+            <th>Coverage Radius</th>
             <th>Created At</th>
             <th>Urgency</th>
             <th>actions</th>
@@ -82,6 +83,7 @@
                 <td>{{ $case->title }}</td>
                 <td>{{ $case->description }}</td>
                 <td>({{ $case->coverage_lat }}, {{ $case->coverage_lng }})</td>
+                <td>{{ $case->coverage_radius ? $case->coverage_radius.' m' : '—' }}</td>
                 <td>{{ $case->created_at }}</td>
                 <td style="background-color: 
                     {{ $case->urgency == 'national' || $case->urgency == 'high' 

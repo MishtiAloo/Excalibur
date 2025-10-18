@@ -43,8 +43,5 @@ class RoutesTest extends TestCase
         $this->get('/volunteers')->assertStatus(200);
     }
 
-    public function test_tips_index_route()
-    {
-        $this->get('/tips')->assertStatus(200);
-    }
+    // tips routes removed
 }

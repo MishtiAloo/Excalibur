@@ -11,7 +11,7 @@ class Report extends Model
 
     protected $primaryKey = 'report_id';
     protected $fillable = [
-        'case_id','user_id','report_type','description','location_lat','location_lng','timestamp','status'
+        'case_id','user_id','report_type','description','location_lat','location_lng','sighted_person','timestamp','status'
     ];
 
     public function caseFile()
@@ -29,28 +29,5 @@ class Report extends Model
         return $this->hasMany(MediaReport::class, 'report_id');
     }
 
-    public function tip()
-    {
-        return $this->hasOne(Tip::class, 'report_id');
-    }
-
-    public function evidence()
-    {
-        return $this->hasOne(Evidence::class, 'report_id');
-    }
-
-    public function sighting()
-    {
-        return $this->hasOne(Sighting::class, 'report_id');
-    }
-
-    public function hazard()
-    {
-        return $this->hasOne(Hazard::class, 'report_id');
-    }
-
-    public function attack()
-    {
-        return $this->hasOne(Attack::class, 'report_id');
-    }
+    // Subtype models removed; use report_type and optional fields directly
 }

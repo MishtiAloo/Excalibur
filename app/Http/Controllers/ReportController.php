@@ -17,10 +17,11 @@ class ReportController extends Controller
         $data = $request->validate([
             'case_id' => 'required|exists:cases,case_id',
             'user_id' => 'required|exists:users,id',
-            'report_type' => 'required|string|in:tip,evidence,sighting,hazard,attack,general',
+            'report_type' => 'required|string|in:evidence,sighting,general',
             'description' => 'nullable|string',
             'location_lat' => 'nullable|numeric|between:-90,90',
             'location_lng' => 'nullable|numeric|between:-180,180',
+            'sighted_person' => 'nullable|string|max:255',
             'timestamp' => 'nullable|date',
             'status' => 'nullable|string|in:pending,verified,ressponded,falsed,dismissed',
         ]);
@@ -34,16 +35,17 @@ class ReportController extends Controller
 
     public function show(Report $report)
     {
-        return response()->json($report->load(['caseFile','user','media']));
+    return response()->json($report->load(['caseFile','user','media']));
     }
 
     public function update(Request $request, Report $report)
     {
         $data = $request->validate([
-            'report_type' => 'sometimes|string|in:tip,evidence,sighting,hazard,attack,general',
+            'report_type' => 'sometimes|string|in:evidence,sighting,general',
             'description' => 'nullable|string',
             'location_lat' => 'nullable|numeric|between:-90,90',
             'location_lng' => 'nullable|numeric|between:-180,180',
+            'sighted_person' => 'nullable|string|max:255',
             'timestamp' => 'nullable|date',
             'status' => 'nullable|string|in:pending,verified,ressponded,falsed,dismissed',
         ]);

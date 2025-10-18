@@ -20,6 +20,7 @@ class CaseFileFactory extends Factory
             'description' => $this->faker->paragraph(),
             'coverage_lat' => $this->faker->latitude(),
             'coverage_lng' => $this->faker->longitude(),
+            'coverage_radius' => $this->faker->numberBetween(100, 5000),
             'status' => $this->faker->randomElement(['active','under_investigation','resolved','closed']),
             'urgency' => $this->faker->randomElement(['low','medium','high','critical','national']),
         ];

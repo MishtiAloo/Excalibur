@@ -20,21 +20,17 @@ class ApiValidationTest extends TestCase
             'status' => 'active',
         ];
 
-        $res = $this->postJson('/users', $payload);
-        $res->assertCreated()->assertJsonFragment([
-            'name' => 'Jane Doe',
-            'email' => 'jane@example.com',
-        ]);
+        $res = $this->post('/signup', $payload);
+        $res->assertRedirect(route('login'));
 
         $this->assertDatabaseHas('users', [
             'email' => 'jane@example.com',
-            'password' => 'plainpass', // ensure not hashed per requirement
         ]);
     }
 
     public function test_create_user_validation_errors()
     {
-        $res = $this->postJson('/users', [
+        $res = $this->postJson('/signup', [
             'name' => '',
             'email' => 'not-an-email',
             'password' => '123',
@@ -101,6 +97,7 @@ class ApiValidationTest extends TestCase
             'user_id' => $creator->id,
             'report_type' => 'general',
             'description' => 'Initial report',
+            'sighted_person' => 'John Doe',
             'status' => 'pending',
         ];
 
