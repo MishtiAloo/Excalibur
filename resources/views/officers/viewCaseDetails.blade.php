@@ -70,6 +70,10 @@
 
     {{-- Search Groups --}}
     <h2 style="color: #ffffff;">Search Groups</h2>
+    <div style=" margin-bottom: 10px;">
+        <a href="{{ route('search-groups.create', ['case_id' => $case->case_id]) }}" style="background-color: #3b82f6; color: white; padding: 8px 12px; border-radius: 4px; text-decoration: none;">+ Add Search Group</a>
+    </div>
+
     @if (!empty($case->searchGroups) && count($case->searchGroups) > 0)
     <table style="width: 100%; border=1; border-collapse: collapse; margin-top: 10px;">
         <thead style="background-color: #f2f2f2;">
@@ -79,18 +83,27 @@
                 <th>Type</th>
                 <th>Intensity</th>
                 <th>Status</th>
-                <th>Allocated Time</th>
+                <th>Start Time</th>
+                <th>Duration (min)</th>
+                <th>Report Back</th>
+                <th>Max Volunteers</th>
+                <th>Available Slots</th>
             </tr>
         </thead>
         <tbody>
             @foreach ($case->searchGroups as $group)
-            <tr>
+            <tr onclick="window.location='{{ route('search_groups.show', $group->group_id) }}'" style="cursor:pointer;">
+
                 <td>{{ $group->group_id }}</td>
                 <td>{{ $group->leader_id }}</td>
                 <td>{{ ucfirst($group->type) }}</td>
                 <td>{{ ucfirst($group->intensity) }}</td>
-                <td>{{ ucfirst($group->status) }}</td>
-                <td>{{ $group->allocated_time }} hrs</td>
+                <td>{{ str_replace('_',' ', ucfirst($group->status)) }}</td>
+                <td>{{ $group->start_time ?? '—' }}</td>
+                <td>{{ $group->duration ?? '—' }}</td>
+                <td>{{ $group->report_back_time ?? '—' }}</td>
+                <td>{{ $group->max_volunteers ?? '—' }}</td>
+                <td>{{ $group->available_volunteer_slots ?? '—' }}</td>
             </tr>
             @endforeach
         </tbody>

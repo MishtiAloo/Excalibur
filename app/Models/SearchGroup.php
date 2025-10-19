@@ -12,7 +12,8 @@ class SearchGroup extends Model
     protected $table = 'search_groups';
     protected $primaryKey = 'group_id';
     protected $fillable = [
-        'case_id','leader_id','type','intensity','status','allocated_time',
+        'case_id','leader_id','type','intensity','status',
+        'start_time','duration','report_back_time','max_volunteers','available_volunteer_slots',
         'instruction','allocated_lat','allocated_lng','radius'
     ];
 

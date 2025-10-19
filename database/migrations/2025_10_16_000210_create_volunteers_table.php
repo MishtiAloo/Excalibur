@@ -11,6 +11,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('volunteer_id')->primary(); // FK to users
             $table->string('vetting_status')->default('pending'); // pending/approved/rejected
             $table->string('availability')->default('available'); // available/busy/inactive
+            
             $table->timestamps();
 
             $table->foreign('volunteer_id')->references('id')->on('users')->cascadeOnDelete();

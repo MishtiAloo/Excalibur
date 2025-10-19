@@ -2,11 +2,57 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CaseFile;
 use App\Models\SearchGroup;
+use App\Models\User;
+use App\Models\Volunteer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class SearchGroupController extends Controller
 {
+    // Show the create page for a case-specific search group
+    public function showCreatePage($case_id)
+    {
+        $case = \App\Models\CaseFile::findOrFail($case_id);
+        $selectedLeaderId = session('selected_leader_id');
+        return view('officers.addSearchGroup', compact('case', 'selectedLeaderId'));
+    }
+
+    // Show the leader picker for a given case
+    public function showChooseLeaderPage($case_id)
+    {
+        $case = \App\Models\CaseFile::findOrFail($case_id);
+        // Persist current case context so POST back doesn't need to include it
+        session(['current_case_id' => $case_id]);
+
+        // Candidate leaders: volunteers with attached users
+        $candidateLeaders = \App\Models\Volunteer::with('user')->get();
+
+        // Candidate officers: users with officer role (used directly in blade)
+        $candidateOfficers = \App\Models\User::where('role', 'officer')->get();
+
+        return view('officers.chooseLeader', compact('case','candidateLeaders','candidateOfficers'));
+    }
+
+    // Assign a leader and return to the add search group page preserving case id
+    public function assignLeader(Request $request, $leader_id)
+    {
+        // Ensure leader user exists
+        \App\Models\User::findOrFail($leader_id);
+
+        $caseId = $request->input('case_id') ?? session('current_case_id');
+        if (!$caseId) {
+            return redirect()->back()->withErrors(['error' => 'Missing case context for leader assignment']);
+        }
+
+        // Persist selection in session and redirect back to the create page
+        session(['selected_leader_id' => $leader_id, 'current_case_id' => $caseId]);
+
+        return redirect()->route('search-groups.create', ['case_id' => $caseId])
+            ->with('selected_leader_id', $leader_id)
+            ->with('success', 'Leader assigned');
+    }
     public function index()
     {
         return response()->json(SearchGroup::with(['caseFile','leader'])->paginate(10));
@@ -17,10 +63,14 @@ class SearchGroupController extends Controller
         $data = $request->validate([
             'case_id' => 'required|exists:cases,case_id',
             'leader_id' => 'required|exists:users,id',
-            'type' => 'required|string|in:citizen,covert,terrainSpecial',
+            'type' => 'required|string|in:citizen,terrainSpecial',
             'intensity' => 'nullable|string|in:basic,rigorous,extreme',
-            'status' => 'nullable|string|in:active,paused,completed',
-            'allocated_time' => 'nullable|integer|min:0',
+            'status' => 'nullable|string|in:active,paused,completed,time_assigned,time_unassigned',
+            'start_time' => 'nullable|date',
+            'duration' => 'nullable|integer|min:0',
+            'report_back_time' => 'nullable|date',
+            'max_volunteers' => 'nullable|integer|min:1',
+            'available_volunteer_slots' => 'nullable|integer|min:0',
             'instruction' => 'nullable|string',
             'allocated_lat' => 'nullable|numeric|between:-90,90',
             'allocated_lng' => 'nullable|numeric|between:-180,180',
@@ -28,7 +78,7 @@ class SearchGroupController extends Controller
         ]);
         try {
             $sg = SearchGroup::create($data);
-            return response()->json($sg, 201);
+            return redirect()->route('dashboard.officer');
         } catch (\Throwable $e) {
             return response()->json(['error' => 'Failed to create group'], 400);
         }
@@ -36,16 +86,33 @@ class SearchGroupController extends Controller
 
     public function show(SearchGroup $search_group)
     {
-        return response()->json($search_group->load(['caseFile','leader','volunteers']));
+        $search_group->load(['caseFile','leader','volunteers']);
+        if (Auth::check() && Auth::user()->role === 'officer') {
+            return view('officers.viewSearchGroup', ['group' => $search_group]);
+        }
+        return response()->json($search_group);
+    }
+
+    // Resource edit route: show edit form
+    public function edit(SearchGroup $search_group)
+    {
+        if (Auth::check() && Auth::user()->role === 'officer') {
+            return view('officers.editSearchGroup', ['group' => $search_group]);
+        }
+        abort(403);
     }
 
     public function update(Request $request, SearchGroup $search_group)
     {
         $data = $request->validate([
-            'type' => 'sometimes|string|in:citizen,covert,terrainSpecial',
+            'type' => 'sometimes|string|in:citizen,terrainSpecial',
             'intensity' => 'nullable|string|in:basic,rigorous,extreme',
-            'status' => 'nullable|string|in:active,paused,completed',
-            'allocated_time' => 'nullable|integer|min:0',
+            'status' => 'nullable|string|in:active,paused,completed,time_assigned,time_unassigned',
+            'start_time' => 'nullable|date',
+            'duration' => 'nullable|integer|min:0',
+            'report_back_time' => 'nullable|date',
+            'max_volunteers' => 'nullable|integer|min:1',
+            'available_volunteer_slots' => 'nullable|integer|min:0',
             'instruction' => 'nullable|string',
             'allocated_lat' => 'nullable|numeric|between:-90,90',
             'allocated_lng' => 'nullable|numeric|between:-180,180',
@@ -53,9 +120,16 @@ class SearchGroupController extends Controller
         ]);
         try {
             $search_group->update($data);
-            return response()->json($search_group);
+            if ($request->expectsJson()) {
+                return response()->json($search_group);
+            }
+            return redirect()->route('search-groups.show', $search_group->group_id)
+                ->with('success', 'Search group updated successfully!');
         } catch (\Throwable $e) {
-            return response()->json(['error' => 'Failed to update group'], 400);
+            if ($request->expectsJson()) {
+                return response()->json(['error' => 'Failed to update group'], 400);
+            }
+            return redirect()->back()->with('error', 'Failed to update group')->withInput();
         }
     }
 
@@ -68,4 +142,13 @@ class SearchGroupController extends Controller
             return response()->json(['error' => 'Failed to delete group'], 400);
         }
     }
+
+    // Removed duplicate methods below; consolidated above.
+
+    // Optional friendly route similar to cases: show-edit-page
+    public function showEditPage(SearchGroup $search_group)
+    {
+        return $this->edit($search_group);
+    }
+
 }

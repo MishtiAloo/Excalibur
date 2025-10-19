@@ -40,8 +40,8 @@ class CaseFileController extends Controller
 
         if (Auth::check() && Auth::user()->role === 'officer') {
             return view('officers.viewCaseDetails', ['case' => $case]);
-        } else {
-            return response()->json($case);
+        } elseif (Auth::check() && Auth::user()->role === 'volunteer') {
+             return view('officers.viewCaseDetails', ['case' => $case]);
         }
 
     }

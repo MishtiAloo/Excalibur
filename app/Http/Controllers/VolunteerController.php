@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CaseFile;
 use App\Models\Volunteer;
 use Illuminate\Http\Request;
 
@@ -92,6 +93,7 @@ class VolunteerController extends Controller
     //showvolunteerdashboard
     public function showVolunteerDashboard()
     {
-        return view('volunteers.dashboard');    
+        $activeCases = CaseFile::where('status', 'active')->get();
+        return view('volunteers.dashboard', compact('activeCases')); 
     }
 }

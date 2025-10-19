@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('nid')->nullable();
             $table->string('phone')->nullable();
             $table->string('role')->default('citizen'); // citizen/officer/volunteer/specialVolunteer/group_leader
-            $table->string('status')->default('active'); // active/suspended/inactive
+            $table->string('status')->default('active'); // active/suspended/deactivated
             $table->unsignedTinyInteger('info_credibility')->default(0);
             $table->unsignedTinyInteger('responsiveness')->default(0);
             // Locations stored as lat/lng pairs

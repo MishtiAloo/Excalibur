@@ -11,10 +11,14 @@ return new class extends Migration {
             $table->id('group_id');
             $table->unsignedBigInteger('case_id');
             $table->unsignedBigInteger('leader_id');
-            $table->string('type'); // citizen/covert/terrainSpecial
+            $table->string('type'); // citizen/terrainSpecial (covert removed)
             $table->string('intensity')->default('basic'); // basic/rigorous/extreme
-            $table->string('status')->default('active'); // active/paused/completed
-            $table->unsignedInteger('allocated_time')->nullable();
+            $table->string('status')->default('active'); // active/paused/completed/time_assigned/time_unassigned
+            $table->dateTime('start_time')->nullable();
+            $table->unsignedInteger('duration')->nullable(); // minutes
+            $table->dateTime('report_back_time')->nullable();
+            $table->unsignedInteger('max_volunteers')->nullable();
+            $table->unsignedInteger('available_volunteer_slots')->nullable();
             $table->string('instruction')->nullable();
             $table->decimal('allocated_lat', 10, 7)->nullable();
             $table->decimal('allocated_lng', 10, 7)->nullable();

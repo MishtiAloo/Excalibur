@@ -41,8 +41,8 @@
         <label for="coverage_lng">Coverage Longitude:</label>
         <input type="text" id="coverage_lng" name="coverage_lng" value="{{ $case->coverage_lng }}" required><br><br>
 
-    <label for="coverage_radius">Coverage Radius (meters):</label>
-    <input type="number" id="coverage_radius" name="coverage_radius" value="{{ $case->coverage_radius }}" min="0"><br><br>
+        <label for="coverage_radius">Coverage Radius (meters):</label>
+        <input type="number" id="coverage_radius" name="coverage_radius" value="{{ $case->coverage_radius }}" min="0"><br><br>
 
         <button type="button" onclick="toggleMap()" style="background-color:#3b82f6; color:white; padding:8px 14px; border:none; border-radius:6px;">
             🗺️ Pick Location from Map

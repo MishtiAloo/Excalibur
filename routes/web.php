@@ -53,4 +53,10 @@ Route::post('/apply/special-volunteer', [SpecialVolunteerController::class, 'app
 Route::get('/dashboard/officer/show-create-page', [officerDashboardController::class, 'showCreatePage'])->name('cases.showCreatePage');
 Route::get('/cases/show-edit-page/{case}', [officerDashboardController::class, 'showEditPage'])->name('cases.showEditPage');
 
-
+// SEARCH GROUP RELATED ROUTES
+Route::get('/search-groups/show-create-page/{case_id}', [SearchGroupController::class, 'showCreatePage'])->name('search-groups.create');
+Route::get('/search-groups/choose-leader/{case_id}', [SearchGroupController::class, 'showChooseLeaderPage'])
+    ->name('chooseLeader');
+Route::post('/search-groups/assign-leader/{leader_id}', [SearchGroupController::class, 'assignLeader'])
+    ->name('search-groups.assignLeader');   
+Route::get('/search-groups/show-edit-page/{search_group}', [SearchGroupController::class, 'showEditPage'])->name('search-groups.showEditPage');

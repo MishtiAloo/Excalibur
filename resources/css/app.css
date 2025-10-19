@@ -162,10 +162,12 @@ button:hover,
     box-shadow: 0 4px 8px rgba(255, 235, 59, 0.3);
 }
 
-/* Inputs */
+/* Extend existing input styles */
 input[type="text"],
 input[type="email"],
 input[type="password"],
+input[type="number"],
+input[type="datetime-local"],
 textarea,
 select {
     background-color: var(--bg-gray);
@@ -182,6 +184,8 @@ select {
 input[type="text"]:focus,
 input[type="email"]:focus,
 input[type="password"]:focus,
+input[type="number"]:focus,
+input[type="datetime-local"]:focus,
 textarea:focus,
 select:focus {
     box-shadow: 0 0 8px rgba(255, 235, 59, 0.5);
