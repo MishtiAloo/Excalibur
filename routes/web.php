@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\{UserController, CaseFileController, SearchGroupController, ReportController, OfficerController, VolunteerController, SpecialVolunteerController, SkillController, AlertController, MediaReportController, ResourceItemController, ResourceBookingController, NotificationController, officerDashboardController};
+use App\Http\Controllers\{UserController, CaseFileController, SearchGroupController, GroupMemberController, ReportController, OfficerController, VolunteerController, SpecialVolunteerController, SkillController, AlertController, MediaReportController, ResourceItemController, ResourceBookingController, NotificationController, officerDashboardController};
 
 Route::get('/', function () {
     return view('welcome');
@@ -11,6 +11,12 @@ Route::get('/', function () {
 Route::resource('users', UserController::class)->names('users');
 Route::resource('cases', CaseFileController::class)->parameters(['cases' => 'case'])->names('cases');
 Route::resource('search-groups', SearchGroupController::class)->parameters(['search-groups' => 'search_group'])->names('search_groups');
+// Nested resource for managing group members of a search group
+Route::resource('search-groups.members', GroupMemberController::class)
+    ->shallow()
+    ->only(['index','store','show','destroy'])
+    ->parameters(['search-groups' => 'search_group', 'members' => 'volunteer'])
+    ->names('search_groups.members');
 Route::resource('reports', ReportController::class)->names('reports');
 Route::resource('officers', OfficerController::class)->names('officers');
 Route::resource('volunteers', VolunteerController::class)->names('volunteers');
@@ -60,3 +66,6 @@ Route::get('/search-groups/choose-leader/{case_id}', [SearchGroupController::cla
 Route::post('/search-groups/assign-leader/{leader_id}', [SearchGroupController::class, 'assignLeader'])
     ->name('search-groups.assignLeader');   
 Route::get('/search-groups/show-edit-page/{search_group}', [SearchGroupController::class, 'showEditPage'])->name('search-groups.showEditPage');
+Route::post('/search-groups/{search_group}/add-volunteer', [GroupMemberController::class, 'store'])
+    ->name('search-groups.members.add');
+

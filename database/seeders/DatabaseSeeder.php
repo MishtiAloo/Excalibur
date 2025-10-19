@@ -85,12 +85,8 @@ class DatabaseSeeder extends Seeder
             ]));
         }
 
-        // Attach volunteers to groups
-        foreach ($groups as $g) {
-            if ($volunteerUsers->count() >= 2) {
-                $g->volunteers()->attach($volunteerUsers->take(2)->pluck('id')->toArray());
-            }
-        }
+        // Attach volunteers to groups via seeder (uses volunteers table)
+        $this->call(GroupMemberSeeder::class);
 
         // Reports per case
         $reports = collect();

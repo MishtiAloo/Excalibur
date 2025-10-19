@@ -48,7 +48,7 @@
 
 ### **group_members**
 
-`group_id (FK)`, volunteer*id (FK), *(PK composite: group*id + volunteer_id)*
+`group_id (FK)`, volunteer_id (FK), *(PK composite: group*id + volunteer_id)*
 
 ---
 

@@ -23,13 +23,11 @@ class SearchGroupController extends Controller
     public function showChooseLeaderPage($case_id)
     {
         $case = \App\Models\CaseFile::findOrFail($case_id);
-        // Persist current case context so POST back doesn't need to include it
+
         session(['current_case_id' => $case_id]);
 
-        // Candidate leaders: volunteers with attached users
         $candidateLeaders = \App\Models\Volunteer::with('user')->get();
 
-        // Candidate officers: users with officer role (used directly in blade)
         $candidateOfficers = \App\Models\User::where('role', 'officer')->get();
 
         return view('officers.chooseLeader', compact('case','candidateLeaders','candidateOfficers'));
@@ -38,7 +36,6 @@ class SearchGroupController extends Controller
     // Assign a leader and return to the add search group page preserving case id
     public function assignLeader(Request $request, $leader_id)
     {
-        // Ensure leader user exists
         \App\Models\User::findOrFail($leader_id);
 
         $caseId = $request->input('case_id') ?? session('current_case_id');
@@ -46,8 +43,9 @@ class SearchGroupController extends Controller
             return redirect()->back()->withErrors(['error' => 'Missing case context for leader assignment']);
         }
 
-        // Persist selection in session and redirect back to the create page
         session(['selected_leader_id' => $leader_id, 'current_case_id' => $caseId]);
+
+    
 
         return redirect()->route('search-groups.create', ['case_id' => $caseId])
             ->with('selected_leader_id', $leader_id)
@@ -89,6 +87,9 @@ class SearchGroupController extends Controller
         $search_group->load(['caseFile','leader','volunteers']);
         if (Auth::check() && Auth::user()->role === 'officer') {
             return view('officers.viewSearchGroup', ['group' => $search_group]);
+        }
+        elseif (Auth::check() && Auth::user()->role === 'volunteer') {
+            return view('volunteers.viewSearchGroup', ['group' => $search_group]);
         }
         return response()->json($search_group);
     }
@@ -142,8 +143,6 @@ class SearchGroupController extends Controller
             return response()->json(['error' => 'Failed to delete group'], 400);
         }
     }
-
-    // Removed duplicate methods below; consolidated above.
 
     // Optional friendly route similar to cases: show-edit-page
     public function showEditPage(SearchGroup $search_group)

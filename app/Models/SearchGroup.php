@@ -29,7 +29,7 @@ class SearchGroup extends Model
 
     public function volunteers()
     {
-        return $this->belongsToMany(Volunteer::class, 'group_members', 'group_id', 'volunteer_id');
+        return $this->belongsToMany(Volunteer::class, 'group_members', 'group_id', 'volunteer_id')->withTimestamps();
     }
 
     public function resourceBookings()

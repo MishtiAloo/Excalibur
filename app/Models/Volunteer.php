@@ -27,6 +27,6 @@ class Volunteer extends Model
 
     public function searchGroups()
     {
-        return $this->belongsToMany(SearchGroup::class, 'group_members', 'volunteer_id', 'group_id');
+        return $this->belongsToMany(SearchGroup::class, 'group_members', 'volunteer_id', 'group_id')->withTimestamps();
     }
 }
