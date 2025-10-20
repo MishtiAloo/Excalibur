@@ -7,6 +7,7 @@
     <h2>Welcome volunteer</h2>
 
     <table>
+        <h2>Active Cases Open for volunteering</h2>
         <tr>
             <th>Title</th>
             <th>Description</th>
@@ -42,4 +43,39 @@
             </tr>
         @endforeach
     </table>
+
+    
+    <table>
+        <h2>Assigned Search Groups</h2>
+        <tr>
+            <th>Search Group ID</th>
+            <th>Case Title</th>
+            <th>Leader Name</th>
+            <th>Leader cellphone</th>
+            <th>Start time</th>
+            <th>Duration</th>
+            <th>Assigned Area</th>
+            <th>Current Status</th>
+            <th>actions</th>
+        </tr>
+        @foreach ($assignedSearchGroups as $group)
+            <tr>
+                <td>{{ $group->group_id }}</td>
+                <td>{{ $group->caseFile->title }}</td>
+                <td>{{ $group->leader->name }}</td>
+                <td>{{ $group->leader->phone }}</td>
+                <td>{{ $group->start_time }}</td>
+                <td>{{ $group->duration ? $group->duration.' mins' : '—' }}</td>
+                <td>({{ $group->allocated_lat }}, {{ $group->allocated_lng }})</td>
+                <td>{{ str_replace('_',' ', ucfirst($group->status)) }}</td>
+
+                <td>
+                    <form method="GET" action="{{ route('search_groups.show', $group->group_id) }}">
+                        <button type="submit" style="background-color: rgb(90, 90, 233)">View Details</button>
+                    </form>
+                </td>
+            </tr>
+        @endforeach
+    </table>
+
 @endsection

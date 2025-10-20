@@ -11,7 +11,7 @@ return new class extends Migration {
             $table->id('group_id');
             $table->unsignedBigInteger('case_id');
             $table->unsignedBigInteger('leader_id');
-            $table->string('type'); // citizen/terrainSpecial (covert removed)
+            $table->string('type'); // citizen/terrainSpecial
             $table->string('intensity')->default('basic'); // basic/rigorous/extreme
             $table->string('status')->default('active'); // active/paused/completed/time_assigned/time_unassigned
             $table->dateTime('start_time')->nullable();

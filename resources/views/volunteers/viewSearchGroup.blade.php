@@ -50,25 +50,37 @@
         $isMember = $group->volunteers->contains('volunteer_id', Auth::user()->id);
     @endphp
 
-    @if ($isMember)
-        <div style="margin-top: 30px; text-align: center; color: gray;">
-            <em>You are already a member of this group.</em>
-        </div>
-    @elseif ($group->available_volunteer_slots > 0)
-        <div style="margin-top: 30px; text-align: center;">
-            <form method="POST" action="{{ route('search-groups.members.add', $group->group_id) }}">
-                @csrf
-                <input type="hidden" name="volunteer_id" value="{{ Auth::user()->id }}">
-                <button type="submit" style="background-color: #10b981; color: white; padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer;">
-                    Join as Volunteer
-                </button>
-            </form>
-        </div>
-    @else
-        <div style="margin-top: 30px; text-align: center; color: gray;">
-            <em>No available volunteer slots.</em>
-        </div>
-    @endif
+    <div style="margin-top: 30px; text-align: center;">
+        @if ($group->status === 'completed')
+            <em style="color: gray;">The task of this search group has been completed.</em>
+
+        @elseif ($group->status === 'active')
+            @if ($isMember)
+                <em style="color: gray;">You are already a member. The search is currently running.</em>
+            @else
+                <em style="color: gray;">This is a running search group. You cannot join now.</em>
+            @endif
+
+        @elseif ($group->status === 'paused' || $group->status === 'time_assigned' || $group->status === 'time_unassigned')
+            @if ($isMember)
+                <em style="color: gray;">You are already a member of this group.</em>
+            @elseif ($group->available_volunteer_slots > 0)
+                <form method="POST" action="{{ route('search-groups.members.add', $group->group_id) }}">
+                    @csrf
+                    <input type="hidden" name="volunteer_id" value="{{ Auth::user()->id }}">
+                    <button type="submit" style="background-color: #10b981; color: white; padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer;">
+                        Join as Volunteer
+                    </button>
+                </form>
+            @else
+                <em style="color: gray;">No available volunteer slots.</em>
+            @endif
+
+        @else
+            <em style="color: gray;">Group status not available.</em>
+        @endif
+    </div>
+
 
 
 

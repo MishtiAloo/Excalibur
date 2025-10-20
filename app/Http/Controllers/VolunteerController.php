@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\CaseFile;
+use App\Models\SearchGroup;
 use App\Models\Volunteer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class VolunteerController extends Controller
 {
@@ -93,6 +95,12 @@ class VolunteerController extends Controller
     public function showVolunteerDashboard()
     {
         $activeCases = CaseFile::where('status', 'active')->get();
-        return view('volunteers.dashboard', compact('activeCases')); 
+        $assignedSearchGroups = SearchGroup::whereHas('volunteers', function ($query) {
+            $query->where('volunteers.volunteer_id', Auth::user()->id);
+        })
+        ->with('caseFile')
+        ->get();
+
+        return view('volunteers.dashboard', compact('activeCases', 'assignedSearchGroups')); 
     }
 }

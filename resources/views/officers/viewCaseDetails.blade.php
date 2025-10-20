@@ -70,9 +70,13 @@
 
     {{-- Search Groups --}}
     <h2 style="color: #ffffff;">Search Groups</h2>
-    <div style=" margin-bottom: 10px;">
-        <a href="{{ route('search-groups.create', ['case_id' => $case->case_id]) }}" style="background-color: #3b82f6; color: white; padding: 8px 12px; border-radius: 4px; text-decoration: none;">+ Add Search Group</a>
-    </div>
+
+    @if (Auth::user()->role === 'officer' || Auth::user()->role === 'admin')
+        <div style=" margin-bottom: 10px;">
+            <a href="{{ route('search-groups.create', ['case_id' => $case->case_id]) }}" style="background-color: #3b82f6; color: white; padding: 8px 12px; border-radius: 4px; text-decoration: none;">+ Add Search Group</a>
+        </div>
+    @endif
+
 
     @if (!empty($case->searchGroups) && count($case->searchGroups) > 0)
     <table style="width: 100%; border=1; border-collapse: collapse; margin-top: 10px;">
@@ -114,7 +118,10 @@
 
     <div style="margin-top: 30px; text-align: center;">
         <a href="{{ route('dashboard.officer') }}" style="background-color: #3b82f6; color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none;">← Back to All Cases</a>
-        <a href="{{ route('cases.showEditPage', $case->case_id) }}" style="background-color: #10b981; color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none; margin-left: 15px;">Edit Case</a>
+
+        @if (Auth::user()->role === 'officer' || Auth::user()->role === 'admin')
+            <a href="{{ route('cases.showEditPage', $case->case_id) }}" style="background-color: #10b981; color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none; margin-left: 15px;">Edit Case</a>
+        @endif
     </div>
 </div>
 @endsection
