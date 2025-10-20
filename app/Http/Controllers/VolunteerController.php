@@ -45,7 +45,6 @@ class VolunteerController extends Controller
         if ($request->action === 'approve') {
             $data['vetting_status'] = 'approved';
 
-            // ✅ Update the user's role
             if ($volunteer->user) {
                 $volunteer->user->role = 'volunteer';
                 $volunteer->user->save();

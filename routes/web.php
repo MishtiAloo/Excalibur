@@ -68,4 +68,8 @@ Route::post('/search-groups/assign-leader/{leader_id}', [SearchGroupController::
 Route::get('/search-groups/show-edit-page/{search_group}', [SearchGroupController::class, 'showEditPage'])->name('search-groups.showEditPage');
 Route::post('/search-groups/{search_group}/add-volunteer', [GroupMemberController::class, 'store'])
     ->name('search-groups.members.add');
+Route::delete('/search-groups/{search_group}/members/remove/{volunteer_id}',
+    [GroupMemberController::class, 'remove']
+)->name('search_groups.members.remove');
+
 

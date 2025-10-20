@@ -48,6 +48,50 @@
     <div style="margin-top: 30px; text-align: center;">
         <a href="{{ route('search-groups.showEditPage', $group->group_id) }}" style="background-color: #10b981; color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none;">Edit Group</a>
     </div>
+
+    <!-- Group Members Section -->
+    <div style="margin-top: 40px;">
+        <h2 style="color: #ffffff; margin-bottom: 12px;">Group Volunteers</h2>
+
+        <div id="member-success" style="display:none; background:#16a34a; color:#fff; padding:10px 14px; border-radius:8px; margin-bottom:12px;">Volunteer removed successfully.</div>
+
+        @if($group->volunteers->isEmpty())
+            <p style="color:#e5e7eb;">No volunteers have joined this group yet.</p>
+        @else
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Info Credibility</th>
+                        <th>Responsiveness</th>
+                        <th>Phone</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($group->volunteers as $vol)
+                        <tr id="vol-row-{{ $vol->volunteer_id }}">
+                            <td>{{ optional($vol->user)->name ?? '—' }}</td>
+                            <td>{{ optional($vol->user)->info_credibility ?? '—' }}</td>
+                            <td>{{ optional($vol->user)->responsiveness ?? '—' }}</td>
+                            <td>{{ optional($vol->user)->phone ?? '—' }}</td>
+                            <td>
+                                <form method="POST"
+                                    action="{{ route('search_groups.members.remove', ['search_group' => $group->group_id, 'volunteer_id' => $vol->volunteer_id]) }}"
+                                    onsubmit="return confirm('Are you sure you want to remove this volunteer from the group?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" style="background:#ef4444; color:#fff; border:none; padding:6px 10px; border-radius:6px; cursor:pointer;">
+                                        Remove
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        @endif
+    </div>
 </div>
 @endsection
 

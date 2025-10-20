@@ -36,6 +36,8 @@ class GroupMemberController extends Controller
         Volunteer::where('volunteer_id', $volunteerId)
         ->update(['availability' => 'busy']);
 
+        $group->decrement('available_volunteer_slots');
+
         return redirect()->back()->with('success', 'You have joined the group successfully!');
     }
 
@@ -56,6 +58,16 @@ class GroupMemberController extends Controller
     {
         $group = SearchGroup::findOrFail($search_group);
         $group->volunteers()->detach($volunteer_id);
+        $group->increment('available_volunteer_slots');
+        return response()->json(null, 204);
+    }
+
+    // Remove a volunteer from the group
+    public function remove($search_group, $volunteer_id)
+    {
+        $group = SearchGroup::findOrFail($search_group);
+        $group->volunteers()->detach($volunteer_id);
+        $group->increment('available_volunteer_slots');
         return response()->json(null, 204);
     }
 }
