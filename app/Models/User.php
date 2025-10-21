@@ -81,20 +81,6 @@ class User extends Authenticatable
         return $this->hasMany(Report::class);
     }
 
-    public function skills()
-    {
-    return $this->belongsToMany(
-        Skill::class,
-        'user_skills',      // pivot table
-        'user_id',          // FK on pivot referencing users
-        'skill_id',         // FK on pivot referencing skills
-        'id',               // local key on users
-        'skill_id'          // related key on skills
-        )
-            ->withPivot(['level', 'verified'])
-            ->withTimestamps();
-    }
-
     public function resourceBookings()
     {
         return $this->hasMany(ResourceBooking::class, 'checked_out_by');

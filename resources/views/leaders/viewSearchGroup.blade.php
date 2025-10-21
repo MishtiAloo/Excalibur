@@ -45,45 +45,66 @@
 
     </table>
 
-        
-    @php
-        $isMember = $group->volunteers->contains('volunteer_id', Auth::user()->id);
-    @endphp
+
+    <h2>Filed Reports</h2>
+    <div style="margin-bottom: 20px;">
+        <a href="{{ route('reports.showCreateForm', $group->group_id) }}" style="background-color: #3b82f6; color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none;">Add Report</a>
+    </div>
+    @if ($group->reports->isEmpty())
+        <p style="color:#e5e7eb;">No reports have been filed for this group yet.</p>
+    @else
+        <table style="width: 100%; border=1; border-collapse: collapse; margin-top: 10px;">
+            <thead style="background-color: #f2f2f2;">
+                <tr>
+                    <th>Report ID</th>
+                    <th>Filed By</th>
+                    <th>Location (Lat, Lng)</th>
+                    <th>Sighted Person</th>
+                    <th>Reported At</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($group->reports as $report)
+                <tr onclick="window.location='{{ route('reports.show', $report->report_id) }}'" style="cursor:pointer;">
+                    <td>{{ $report->report_id }}</td>
+                    <td>{{ optional($report->user)->id }}, {{ optional($report->user)->name }}</td>
+                    <td>{{ $report->location_lat }}, {{ $report->location_lng }}</td>
+                    <td>{{ $report->sighted_person ?? '—' }}</td>
+                    <td>{{ $report->reported_at }}</td>
+                    <td>{{ ucfirst($report->status) }}</td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    @endif
+
 
     <div style="margin-top: 30px; text-align: center;">
         @if ($group->status === 'completed')
             <em style="color: gray;">The task of this search group has been completed.</em>
-
+  
         @elseif ($group->status === 'active')
-            @if ($isMember)
-                <em style="color: gray;">You are already a member. The search is currently running.</em>
-            @else
-                <em style="color: gray;">This is a running search group. You cannot join now.</em>
-            @endif
-
-        @elseif ($group->status === 'paused' || $group->status === 'time_assigned' || $group->status === 'time_unassigned')
-            @if ($isMember)
-                <em style="color: gray;">You are already a member of this group.</em>
-            @elseif ($group->available_volunteer_slots > 0)
-                <form method="POST" action="{{ route('search-groups.members.add', $group->group_id) }}">
-                    @csrf
-                    <input type="hidden" name="volunteer_id" value="{{ Auth::user()->id }}">
-                    <button type="submit" style="background-color: #10b981; color: white; padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer;">
-                        Join as Volunteer
-                    </button>
-                </form>
-            @else
-                <em style="color: gray;">No available volunteer slots.</em>
-            @endif
+            <em style="color: gray;">The search is currently running.</em>
+            <form action="{{ route('searchGroup.end', $group) }}" method="POST" style="display:inline;">
+                @csrf
+                @method('PUT')
+                <button type="submit">End Search</button>
+            </form>
+        @elseif ($group->status === 'time_assigned')
+            <em style="color: gray;">The search time has been assigned.</em>
+            <form action="{{ route('searchGroup.start', $group) }}" method="POST" style="display:inline;">
+                @csrf
+                @method('PUT')
+                <button type="submit">Start Search</button>
+            </form>
+        @elseif ($group->status === 'time_unassigned')
+                <em style="color: gray;">The search time has not been assigned yet.</em>
 
         @else
             <em style="color: gray;">Group status not available.</em>
         @endif
     </div>
-
-
-
-
 </div>
 @endsection
 
@@ -162,37 +183,4 @@
     }
 </script>
 @endsection
-
-    @section('content')
-        <!-- Group Reports Section -->
-        <div style="margin-top: 40px;">
-            <h2 style="color: #ffffff; margin-bottom: 12px;">Filed Reports</h2>
-            @if($group->reports->isEmpty())
-                <p style="color:#e5e7eb;">No reports have been filed for this group yet.</p>
-            @else
-                <table style="width:100%; border-collapse:collapse;">
-                    <thead style="background:#111827;color:#9ca3af;">
-                        <tr>
-                            <th style="padding:8px;">Report ID</th>
-                            <th style="padding:8px;">Filed By</th>
-                            <th style="padding:8px;">Location</th>
-                            <th style="padding:8px;">Reported At</th>
-                            <th style="padding:8px;">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($group->reports as $report)
-                            <tr style="cursor:pointer;" onclick="window.location='{{ route('reports.show', $report->report_id) }}'">
-                                <td style="padding:8px;">{{ $report->report_id }}</td>
-                                <td style="padding:8px;">{{ optional($report->user)->name ?? '—' }}</td>
-                                <td style="padding:8px;">{{ $report->location_lat }}, {{ $report->location_lng }}</td>
-                                <td style="padding:8px;">{{ $report->reported_at }}</td>
-                                <td style="padding:8px;">{{ ucfirst($report->status) }}</td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            @endif
-        </div>
-    @endsection
 

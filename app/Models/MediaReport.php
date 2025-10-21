@@ -10,7 +10,7 @@ class MediaReport extends Model
     use HasFactory;
 
     protected $primaryKey = 'media_id';
-    protected $fillable = ['report_id','uploaded_by','url','uploaded_at','description'];
+    protected $fillable = ['report_id','uploaded_by','url','description'];
 
     public function report()
     {

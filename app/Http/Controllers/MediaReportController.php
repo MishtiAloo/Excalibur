@@ -18,7 +18,6 @@ class MediaReportController extends Controller
             'report_id' => 'required|exists:reports,report_id',
             'uploaded_by' => 'required|exists:users,id',
             'url' => 'required|url',
-            'uploaded_at' => 'nullable|date',
             'description' => 'nullable|string',
         ]);
 
@@ -39,7 +38,6 @@ class MediaReportController extends Controller
     {
         $data = $request->validate([
             'url' => 'sometimes|url',
-            'uploaded_at' => 'nullable|date',
             'description' => 'nullable|string',
         ]);
 

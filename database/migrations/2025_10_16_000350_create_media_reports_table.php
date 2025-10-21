@@ -12,7 +12,6 @@ return new class extends Migration {
             $table->unsignedBigInteger('report_id');
             $table->unsignedBigInteger('uploaded_by');
             $table->string('url');
-            $table->timestamp('uploaded_at')->nullable();
             $table->text('description')->nullable();
             $table->timestamps();
 

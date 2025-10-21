@@ -92,6 +92,37 @@
             </table>
         @endif
     </div>
+
+    <!-- Group Reports Section -->
+    <div style="margin-top: 40px;">
+        <h2 style="color: #ffffff; margin-bottom: 12px;">Filed Reports</h2>
+        @if($group->reports->isEmpty())
+            <p style="color:#e5e7eb;">No reports have been filed for this group yet.</p>
+        @else
+            <table style="width:100%; border-collapse:collapse;">
+                <thead style="background:#111827;color:#9ca3af;">
+                    <tr>
+                        <th style="padding:8px;">Report ID</th>
+                        <th style="padding:8px;">Filed By</th>
+                        <th style="padding:8px;">Location</th>
+                        <th style="padding:8px;">Reported At</th>
+                        <th style="padding:8px;">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($group->reports as $report)
+                        <tr style="cursor:pointer;" onclick="window.location='{{ route('reports.show', $report->report_id) }}'">
+                            <td style="padding:8px;">{{ $report->report_id }}</td>
+                            <td style="padding:8px;">{{ optional($report->user)->name ?? '—' }}</td>
+                            <td style="padding:8px;">{{ $report->location_lat }}, {{ $report->location_lng }}</td>
+                            <td style="padding:8px;">{{ $report->reported_at }}</td>
+                            <td style="padding:8px;">{{ ucfirst($report->status) }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        @endif
+    </div>
 </div>
 @endsection
 

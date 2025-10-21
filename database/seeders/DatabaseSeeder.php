@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\{User, Officer, Volunteer, SpecialVolunteer, Skill, CaseFile, SearchGroup, Report, MediaReport, Alert, ResourceItem, ResourceBooking, Notification};
+use App\Models\{User, Officer, Volunteer, SpecialVolunteer, CaseFile, SearchGroup, Report, MediaReport, Alert, ResourceItem, ResourceBooking, Notification};
 
 class DatabaseSeeder extends Seeder
 {
@@ -58,15 +58,6 @@ class DatabaseSeeder extends Seeder
         }
 
 
-        // Skills
-        $skills = Skill::factory(6)->create();
-        foreach ($users as $u) {
-            $u->skills()->attach($skills->random(2)->pluck('skill_id')->toArray(), [
-                'level' => 'intermediate',
-                'verified' => true,
-            ]);
-        }
-
         // Cases (<=5)
         $cases = CaseFile::factory(10)->create([
             'created_by' => $users->random()->id,
@@ -75,9 +66,11 @@ class DatabaseSeeder extends Seeder
         // Search groups per case
         $groups = collect();
         foreach ($cases as $case) {
+            // choose a leader strictly from users assigned role group_leader
+            $leader = $users->firstWhere('role', 'group_leader') ?? $users->slice(10, 3)->first();
             $groups = $groups->merge(SearchGroup::factory(2)->create([
                 'case_id' => $case->case_id,
-                'leader_id' => $users->random()->id,
+                'leader_id' => optional($leader)->id,
                 'instruction' => fake()->sentence(),
                 'allocated_lat' => fake()->latitude(),
                 'allocated_lng' => fake()->longitude(),
@@ -88,12 +81,15 @@ class DatabaseSeeder extends Seeder
         // Attach volunteers to groups via seeder (uses volunteers table)
         $this->call(GroupMemberSeeder::class);
 
-        // Reports per case
+        // Reports per group (ensure search_group_id is set)
         $reports = collect();
-        foreach ($cases as $case) {
+        foreach ($groups as $g) {
+            // Prefer group leader as reporter; fallback to any user
+            $reporterId = $g->leader_id ?? $users->random()->id;
             $reports = $reports->merge(Report::factory(2)->create([
-                'case_id' => $case->case_id,
-                'user_id' => $users->random()->id,
+                'case_id' => $g->case_id,
+                'search_group_id' => $g->group_id,
+                'user_id' => $reporterId,
             ]));
         }
 

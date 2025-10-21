@@ -11,7 +11,7 @@ class Report extends Model
 
     protected $primaryKey = 'report_id';
     protected $fillable = [
-        'case_id','user_id','report_type','description','location_lat','location_lng','sighted_person','timestamp','status'
+        'case_id','search_group_id','user_id','report_type','description','location_lat','location_lng','sighted_person','reported_at','status'
     ];
 
     public function caseFile()
@@ -24,10 +24,14 @@ class Report extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function searchGroup()
+    {
+        return $this->belongsTo(SearchGroup::class, 'search_group_id', 'group_id');
+    }
+
     public function media()
     {
         return $this->hasMany(MediaReport::class, 'report_id');
     }
 
-    // Subtype models removed; use report_type and optional fields directly
 }

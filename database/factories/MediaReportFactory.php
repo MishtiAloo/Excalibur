@@ -16,7 +16,6 @@ class MediaReportFactory extends Factory
     {
         return [
             'url' => $this->faker->imageUrl(),
-            'uploaded_at' => now(),
             'description' => $this->faker->sentence(),
         ];
     }

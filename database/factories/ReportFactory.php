@@ -20,7 +20,7 @@ class ReportFactory extends Factory
             'location_lat' => $this->faker->latitude(),
             'location_lng' => $this->faker->longitude(),
             'sighted_person' => $this->faker->optional()->name(),
-            'timestamp' => now(),
+            'reported_at' => now(),
             'status' => $this->faker->randomElement(['pending','verified','ressponded','falsed','dismissed']),
         ];
     }

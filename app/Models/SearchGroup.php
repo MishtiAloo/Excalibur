@@ -36,4 +36,10 @@ class SearchGroup extends Model
     {
         return $this->hasMany(ResourceBooking::class, 'group_id');
     }
+
+    public function reports()
+    {
+        return $this->hasMany(Report::class, 'search_group_id', 'group_id');
+    }
+
 }

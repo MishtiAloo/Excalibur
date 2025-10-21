@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\{UserController, CaseFileController, SearchGroupController, GroupMemberController, ReportController, OfficerController, VolunteerController, SpecialVolunteerController, SkillController, AlertController, MediaReportController, ResourceItemController, ResourceBookingController, NotificationController, officerDashboardController};
+use App\Http\Controllers\{UserController, CaseFileController, SearchGroupController, GroupMemberController, ReportController, OfficerController, VolunteerController, SpecialVolunteerController, AlertController, MediaReportController, ResourceItemController, ResourceBookingController, NotificationController, officerDashboardController};
 
 Route::get('/', function () {
     return view('welcome');
@@ -21,7 +21,6 @@ Route::resource('reports', ReportController::class)->names('reports');
 Route::resource('officers', OfficerController::class)->names('officers');
 Route::resource('volunteers', VolunteerController::class)->names('volunteers');
 Route::resource('special-volunteers', SpecialVolunteerController::class)->parameters(['special-volunteers' => 'special_volunteer'])->names('special_volunteers');
-Route::resource('skills', SkillController::class)->names('skills');
 Route::resource('alerts', AlertController::class)->names('alerts');
 Route::resource('media-reports', MediaReportController::class)->parameters(['media-reports' => 'media_report'])->names('media_reports');
 Route::resource('resources', ResourceItemController::class)->names('resources');
@@ -71,5 +70,13 @@ Route::post('/search-groups/{search_group}/add-volunteer', [GroupMemberControlle
 Route::delete('/search-groups/{search_group}/members/remove/{volunteer_id}',
     [GroupMemberController::class, 'remove']
 )->name('search_groups.members.remove');
+Route::put('/search-groups/{search_group}', [SearchGroupController::class, 'startSearch'])
+    ->name('searchGroup.start');
+Route::put('/search-groups/{search_group}/end', [SearchGroupController::class, 'endSearch'])
+    ->name('searchGroup.end');
 
 
+
+// Report routes (leader context)
+Route::get('/search-group/{search_group}/reports/create-form', [ReportController::class, 'showAddReportForm'])->name('reports.showCreateForm');
+Route::post('/search-group/{search_group}/reports/submit', [ReportController::class, 'addReport'])->name('reports.add');

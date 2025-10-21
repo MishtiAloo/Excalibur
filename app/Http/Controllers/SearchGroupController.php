@@ -84,12 +84,18 @@ class SearchGroupController extends Controller
 
     public function show(SearchGroup $search_group)
     {
-        $search_group->load(['caseFile','leader','volunteers']);
+        $search_group->load(['caseFile','leader','volunteers.user','reports.user']);
         if (Auth::check() && Auth::user()->role === 'officer') {
             return view('officers.viewSearchGroup', ['group' => $search_group]);
         }
         elseif (Auth::check() && Auth::user()->role === 'volunteer') {
-            return view('volunteers.viewSearchGroup', ['group' => $search_group]);
+            $case = $search_group->caseFile;
+            return view('volunteers.viewSearchGroup', ['group' => $search_group, 'case' => $case]);
+        }
+        elseif (Auth::check() && Auth::user()->role === 'group_leader') {
+            $case = $search_group->caseFile;
+            $groupMembers = $search_group->volunteers->map(fn($v) => $v->user)->filter();
+            return view('leaders.viewSearchGroup', ['group' => $search_group, 'case' => $case, 'groupMembers' => $groupMembers]);
         }
         return response()->json($search_group);
     }
@@ -148,6 +154,46 @@ class SearchGroupController extends Controller
     public function showEditPage(SearchGroup $search_group)
     {
         return $this->edit($search_group);
+    }
+
+    // Show the leader's dashboard with their assigned search groups
+    public function showLeaderDashboard()
+    {
+        $assignedSearchGroups = SearchGroup::where('leader_id', Auth::user()->id)
+            ->with('caseFile')
+            ->get();
+
+        $activeSearchGroups = $assignedSearchGroups->where('status', 'active');
+        return view('leaders.dashboard', compact('assignedSearchGroups', 'activeSearchGroups'));
+    }
+
+    // Start the search for a specific search group
+    public function startSearch(Request $request, SearchGroup $search_group)
+    {
+        try {   
+            $search_group->status = 'active';
+            $search_group->save();
+
+            return redirect()->back()
+                ->with('success', 'Search started successfully!');
+        } catch (\Throwable $e) {
+            return redirect()->back()->with('error', 'Failed to start search')->withInput();
+        }
+    }
+
+    // End the search for a specific search group
+    public function endSearch(Request $request, SearchGroup $search_group)
+    {
+        try {   
+            $search_group->status = 'time_unassigned';
+            $search_group->report_back_time = now();
+            $search_group->save();
+            
+            return redirect()->back()
+                ->with('success', 'Search ended successfully!');
+        } catch (\Throwable $e) {
+            return redirect()->back()->with('error', 'Failed to end search')->withInput();
+        }
     }
 
 }
