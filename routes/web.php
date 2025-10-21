@@ -21,7 +21,7 @@ Route::resource('reports', ReportController::class)->names('reports');
 Route::resource('officers', OfficerController::class)->names('officers');
 Route::resource('volunteers', VolunteerController::class)->names('volunteers');
 Route::resource('special-volunteers', SpecialVolunteerController::class)->parameters(['special-volunteers' => 'special_volunteer'])->names('special_volunteers');
-Route::resource('alerts', AlertController::class)->names('alerts');
+// Alert resource is registered after custom routes to avoid parameter route conflicts
 Route::resource('media-reports', MediaReportController::class)->parameters(['media-reports' => 'media_report'])->names('media_reports');
 Route::resource('resources', ResourceItemController::class)->names('resources');
 Route::resource('resource-bookings', ResourceBookingController::class)->parameters(['resource-bookings' => 'resource_booking'])->names('resource_bookings');
@@ -80,3 +80,12 @@ Route::put('/search-groups/{search_group}/end', [SearchGroupController::class, '
 // Report routes (leader context)
 Route::get('/search-group/{search_group}/reports/create-form', [ReportController::class, 'showAddReportForm'])->name('reports.showCreateForm');
 Route::post('/search-group/{search_group}/reports/submit', [ReportController::class, 'addReport'])->name('reports.add');
+
+
+// Alert routes
+Route::get('/alerts/create/case/{case}', [AlertController::class, 'showCreateFormForCase'])->name('alerts.create.case');
+Route::get('/alerts/nearby', [AlertController::class, 'nearbyAlerts'])->name('alerts.nearby');
+Route::resource('alerts', AlertController::class)->names('alerts');
+
+// Contact page
+Route::get('/contact', function(){ return view('contact'); })->name('contact');

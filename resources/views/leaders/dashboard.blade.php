@@ -39,6 +39,8 @@
         </table>
     @endif
 
+    {{-- Alerts are managed by officers and shown on the officer dashboard. --}}
+
 
     <h2>Assigned Search Groups & Schedules</h2>
     <table>

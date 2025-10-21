@@ -121,6 +121,7 @@
 
         @if (Auth::user()->role === 'officer' || Auth::user()->role === 'admin')
             <a href="{{ route('cases.showEditPage', $case->case_id) }}" style="background-color: #10b981; color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none; margin-left: 15px;">Edit Case</a>
+            <a href="{{ route('alerts.create.case', $case->case_id) }}" style="background-color: #ef4444; color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none; margin-left: 15px;">+ Add Alert</a>
         @endif
     </div>
 </div>

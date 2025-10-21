@@ -25,9 +25,9 @@ class AlertController extends Controller
 
         try {
             $a = Alert::create($data);
-            return response()->json($a, 201);
+            return redirect()->route('dashboard.officer')->with('success', 'Alert created successfully!');
         } catch (\Throwable $e) {
-            return response()->json(['error' => 'Failed to create alert'], 400);
+            return redirect()->route('dashboard.officer')->with('error', 'Failed to create alert')->withInput();
         }
     }
 
@@ -48,9 +48,9 @@ class AlertController extends Controller
 
         try {
             $alert->update($data);
-            return response()->json($alert);
+            return redirect()->route('dashboard.officer')->with('success', 'Alert updated successfully!');
         } catch (\Throwable $e) {
-            return response()->json(['error' => 'Failed to update alert'], 400);
+            return redirect()->back()->with('error', 'Failed to update alert')->withInput();
         }
     }
 
@@ -62,5 +62,36 @@ class AlertController extends Controller
         } catch (\Throwable $e) {
             return response()->json(['error' => 'Failed to delete alert'], 400);
         }
+    }
+
+    // Show create form for a specific case (officer view)
+    public function showCreateFormForCase($case)
+    {
+        $caseModel = \App\Models\CaseFile::findOrFail($case);
+        return view('officers.addAlert', ['case' => $caseModel]);
+    }
+
+    // List nearby alerts for the authenticated user
+    public function nearbyAlerts()
+    {
+        $user = \Illuminate\Support\Facades\Auth::user();
+        $alerts = collect();
+        if ($user && $user->permanent_lat && $user->permanent_lng) {
+            $lat = $user->permanent_lat;
+            $lng = $user->permanent_lng;
+            $radiusKm = 100;
+            $alerts = Alert::where('alerts.status', 'active')
+                ->join('cases', 'cases.case_id', '=', 'alerts.case_id')
+                ->select('alerts.*')
+                ->selectRaw(sprintf('(( 6371 * acos( cos( radians(%1$s) ) * cos( radians( cases.coverage_lat ) ) * cos( radians( cases.coverage_lng ) - radians(%2$s) ) + sin( radians(%1$s) ) * sin( radians( cases.coverage_lat ) ) ) )) as distance_km', $lat, $lng))
+                ->havingRaw('distance_km <= ?', [$radiusKm])
+                ->orderBy('distance_km')
+                ->get();
+        }
+        // send case also
+        $case_ids = $alerts->pluck('case_id')->unique();
+        $cases = \App\Models\CaseFile::whereIn('case_id', $case_ids)->get();
+
+        return view('alerts', ['alerts' => $alerts, 'cases' => $cases]);
     }
 }

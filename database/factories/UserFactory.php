@@ -35,10 +35,11 @@ class UserFactory extends Factory
             'status' => fake()->randomElement(['active','suspended','inactive']),
             'info_credibility' => fake()->numberBetween(0, 100),
             'responsiveness' => fake()->numberBetween(0, 100),
-            'permanent_lat' => fake()->latitude(),
-            'permanent_lng' => fake()->longitude(),
-            'current_lat' => fake()->latitude(),
-            'current_lng' => fake()->longitude(),
+            'permanent_lat' => fake()->latitude(22, 27),
+            'permanent_lng' => fake()->longitude(88, 92),
+            'current_lat' => fake()->latitude(22, 27),
+            'current_lng' => fake()->longitude(88, 92),
+
         ];
     }
 

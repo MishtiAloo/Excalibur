@@ -107,4 +107,47 @@
         @endforeach
     </table>
 
+    <h2 style="margin-top:24px;">Active Alerts</h2>
+    @if(isset($activeAlerts) && $activeAlerts->isNotEmpty())
+        <table>
+            <thead>
+                <tr>
+                    <th>Alert ID</th>
+                    <th>Case ID</th>
+                    <th>Type</th>
+                    <th>Status</th>
+                    <th>Expires At</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($activeAlerts as $alert)
+                    <tr>
+                        <td>{{ $alert->alert_id }}</td>
+                        <td>{{ $alert->case_id }}</td>
+                        <td>{{ ucfirst($alert->alert_type) }}</td>
+                        <td>{{ ucfirst($alert->status) }}</td>
+                        <td>{{ $alert->expires_at }}</td>
+                        <td>
+                            <form method="POST" action="{{ route('alerts.update', $alert->alert_id) }}" style="display:inline;">
+                                @csrf
+                                @method('PUT')
+                                <input type="hidden" name="status" value="expired">
+                                <button type="submit" style="background:#ef4444;color:#fff;border:none;padding:6px 8px;border-radius:6px;">Expire</button>
+                            </form>
+                            <form method="POST" action="{{ route('alerts.update', $alert->alert_id) }}" style="display:inline;margin-left:8px;">
+                                @csrf
+                                @method('PUT')
+                                <input type="hidden" name="status" value="cancelled">
+                                <button type="submit" style="background:#6b7280;color:#fff;border:none;padding:6px 8px;border-radius:6px;">Cancel</button>
+                            </form>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    @else
+        <p>No active alerts.</p>
+    @endif
+
 @endsection

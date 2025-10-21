@@ -163,8 +163,8 @@ class SearchGroupController extends Controller
             ->with('caseFile')
             ->get();
 
-        $activeSearchGroups = $assignedSearchGroups->where('status', 'active');
-        return view('leaders.dashboard', compact('assignedSearchGroups', 'activeSearchGroups'));
+    $activeSearchGroups = $assignedSearchGroups->where('status', 'active');
+    return view('leaders.dashboard', compact('assignedSearchGroups', 'activeSearchGroups'));
     }
 
     // Start the search for a specific search group

@@ -21,8 +21,8 @@
             <a href="{{ url('/') }}" class="navbar-brand">Excalibur</a>
             <ul class="navbar-nav">
                 <li><a href="{{ route('dashboardRouting') }}">Home</a></li>
-                <li><a href="#features">Alerts</a></li>
-                <li><a href="#contact">Contact</a></li>
+                <li><a href="{{ route('alerts.nearby') }}">Alerts</a></li>
+                <li><a href="{{ route('contact') }}">Contact</a></li>
                 <li><a href="{{ route('profile.page') }}">Profile</a></li>
             </ul>
 
