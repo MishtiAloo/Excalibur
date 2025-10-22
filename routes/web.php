@@ -40,12 +40,20 @@ Route::get('/signupform', [UserController::class, 'showSignupForm'])->name('sign
 Route::post('/signup', [UserController::class, 'store'])->name('signup');
 
 
-// dashboard routes
-Route::get('/dashboard/officer', [officerDashboardController::class, 'showOfficerDashboard'])->name('dashboard.officer');
-Route::get('/dashboard/volunteer', [VolunteerController::class, 'showVolunteerDashboard'])->name('dashboard.volunteer');
-Route::get('/dashboard/groupleader', [SearchGroupController::class, 'showLeaderDashboard'])->name('dashboard.groupleader');
-Route::get('/dashboard/citizen', [UserController::class, 'showCitizenDashboard'])->name('dashboard.citizen');
-Route::get('/dashboard', [UserController::class, 'routeToDashboard'])->name('dashboardRouting');
+// dashboard routes (protected by auth + role)
+Route::middleware(['auth', 'role:officer'])->group(function () {
+    Route::get('/dashboard/officer', [officerDashboardController::class, 'showOfficerDashboard'])->name('dashboard.officer');
+});
+Route::middleware(['auth', 'role:volunteer'])->group(function () {
+    Route::get('/dashboard/volunteer', [VolunteerController::class, 'showVolunteerDashboard'])->name('dashboard.volunteer');
+});
+Route::middleware(['auth', 'role:group_leader'])->group(function () {
+    Route::get('/dashboard/groupleader', [SearchGroupController::class, 'showLeaderDashboard'])->name('dashboard.groupleader');
+});
+Route::middleware(['auth', 'role:citizen'])->group(function () {
+    Route::get('/dashboard/citizen', [UserController::class, 'showCitizenDashboard'])->name('dashboard.citizen');
+});
+Route::middleware(['auth'])->get('/dashboard', [UserController::class, 'routeToDashboard'])->name('dashboardRouting');
 
 
 // profile route
