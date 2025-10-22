@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\{UserController, CaseFileController, SearchGroupController, GroupMemberController, ReportController, OfficerController, VolunteerController, SpecialVolunteerController, AlertController, MediaReportController, ResourceItemController, ResourceBookingController, NotificationController, officerDashboardController};
+use App\Http\Controllers\{UserController, CaseFileController, SearchGroupController, GroupMemberController, ReportController, OfficerController, VolunteerController, SpecialVolunteerController, AlertController, ImageController, MediaReportController, NotificationController, officerDashboardController};
 
 Route::get('/', function () {
     return view('welcome');
@@ -23,8 +23,8 @@ Route::resource('volunteers', VolunteerController::class)->names('volunteers');
 Route::resource('special-volunteers', SpecialVolunteerController::class)->parameters(['special-volunteers' => 'special_volunteer'])->names('special_volunteers');
 // Alert resource is registered after custom routes to avoid parameter route conflicts
 Route::resource('media-reports', MediaReportController::class)->parameters(['media-reports' => 'media_report'])->names('media_reports');
-Route::resource('resources', ResourceItemController::class)->names('resources');
-Route::resource('resource-bookings', ResourceBookingController::class)->parameters(['resource-bookings' => 'resource_booking'])->names('resource_bookings');
+// ResourceItem and ResourceBooking routes removed — these models/controllers were deprecated.
+// If you plan to delete their files, it's now safe to remove them completely from the project.
 Route::resource('notifications', NotificationController::class)->names('notifications');
 
 // auth routes
@@ -89,3 +89,9 @@ Route::resource('alerts', AlertController::class)->names('alerts');
 
 // Contact page
 Route::get('/contact', function(){ return view('contact'); })->name('contact');
+
+
+// image upload test route
+Route::get('/uptest', function () {
+    return view('imgup');
+});

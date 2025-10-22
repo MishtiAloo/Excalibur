@@ -88,7 +88,7 @@ class AlertController extends Controller
                 ->orderBy('distance_km')
                 ->get();
         }
-        // send case also
+        
         $case_ids = $alerts->pluck('case_id')->unique();
         $cases = \App\Models\CaseFile::whereIn('case_id', $case_ids)->get();
 

@@ -81,10 +81,8 @@ class User extends Authenticatable
         return $this->hasMany(Report::class);
     }
 
-    public function resourceBookings()
-    {
-        return $this->hasMany(ResourceBooking::class, 'checked_out_by');
-    }
+    // ResourceBooking relation removed — ResourceBooking model was deprecated. If you re-add
+    // ResourceBooking, restore this relation.
 
     public function notifications()
     {

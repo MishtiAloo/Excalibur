@@ -12,14 +12,14 @@
         <tr>
             <th>Name</th>
             <th>NID</th>
-            <th>ApplicationStatus</th>
+            <th>Phone</th>
             <th>Action</th>
         </tr>
         @foreach ($pendingVolunteers as $pendings)
             <tr>
                 <td>{{ $pendings->user->name }}</td>
                 <td>{{ $pendings->user->nid }}</td>
-                <td>{{ $pendings->vetting_status }}</td>
+                <td>{{ $pendings->user->phone }}</td>
                 <td>
                     <form method="POST" action="{{ route('volunteers.update', $pendings->volunteer_id) }}">
                         @csrf
@@ -39,7 +39,7 @@
             <th>Name</th>
             <th>NID</th>
             <th>Terrain Type</th>
-            <th>Application Status</th>
+            <th>Phone</th>
             <th>Action</th>
         </tr>
         @foreach ($pendingSpecialVolunteers as $specials)
@@ -47,7 +47,7 @@
                 <td>{{ $specials->volunteer->user->name }}</td>
                 <td>{{ $specials->volunteer->user->nid }}</td>
                 <td>{{ $specials->terrain_type }}</td>
-                <td>{{ $specials->vetting_status }}</td>
+                <td>{{ $specials->volunteer->user->phone }}</td>
                 <td>
                     <form method="POST" action="{{ route('special_volunteers.update', $specials->special_volunteer_id) }}">
                         @csrf
@@ -65,6 +65,7 @@
     <form method="GET" action="{{ route('cases.showCreatePage') }}">
         <button type="submit" style="background-color: rgb(48, 221, 48)">Add New Case</button>
     </form>
+    <br>
 
     <table>
         <tr>

@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\{User, Officer, Volunteer, SpecialVolunteer, CaseFile, SearchGroup, Report, MediaReport, Alert, ResourceItem, ResourceBooking, Notification};
+use App\Models\{User, Officer, Volunteer, SpecialVolunteer, CaseFile, SearchGroup, Report, MediaReport, Alert, Notification};
 
 class DatabaseSeeder extends Seeder
 {
@@ -109,15 +109,8 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-        // Resources and bookings
-        $resources = ResourceItem::factory(5)->create();
-        foreach ($resources as $res) {
-            ResourceBooking::factory()->create([
-                'resource_id' => $res->resource_id,
-                'group_id' => optional($groups->random())->group_id,
-                'checked_out_by' => $users->random()->id,
-            ]);
-        }
+        // Resources and bookings: removed ResourceItem/ResourceBooking seeding because these models were deprecated.
+        // If you want to re-enable seeding later, restore ResourceItem and ResourceBooking factories and models.
 
         // Notifications per user
         foreach ($users as $u) {

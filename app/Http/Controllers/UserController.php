@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CaseFile;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -97,6 +98,10 @@ class UserController extends Controller
     public function routeToDashboard()
     {
         $user = Auth::user();
+        if (!$user) {
+            return redirect()->route('login');
+        }
+        
         if ($user->role == 'officer') {
             return redirect()->route('dashboard.officer');
         }
@@ -159,9 +164,40 @@ class UserController extends Controller
     // Citizen dashboard
     public function showCitizenDashboard()
     {
-        return view('citizens.dashboard'); 
+        $user = Auth::user();
+        $cases = collect();
+
+        if ($user && $user->permanent_lat && $user->permanent_lng) {
+            $lat = $user->permanent_lat;
+            $lng = $user->permanent_lng;
+            $radiusKm = 100;
+
+            $cases = CaseFile::select('*')
+                ->selectRaw(sprintf(
+                    '(6371 * acos(
+                        cos(radians(%1$s)) * cos(radians(coverage_lat)) *
+                        cos(radians(coverage_lng) - radians(%2$s)) +
+                        sin(radians(%1$s)) * sin(radians(coverage_lat))
+                    )) AS distance_km',
+                    $lat,
+                    $lng
+                ))
+                ->having('distance_km', '<=', $radiusKm)
+                ->orderBy('distance_km')
+                ->get();
+        }
+
+        // Count by status
+        $statusCounts = [
+            'active' => $cases->where('status', 'active')->count(),
+            'under_investigation' => $cases->where('status', 'under_investigation')->count(),
+            'resolved' => $cases->where('status', 'resolved')->count(),
+            'closed' => $cases->where('status', 'closed')->count(),
+        ];
+
+        return view('citizens.dashboard', [
+            'cases' => $cases,
+            'statusCounts' => $statusCounts,
+        ]);
     }
-
-
-
 }

@@ -3,7 +3,6 @@
 @section('title', 'Welcome')
 
 @section('content')
-    join as a volunteer message with a short description and a button to go to volunteer profile page
     <h1>helo</h1>
     <h2>Welcome citizen</h2>
     <p>Join us as a volunteer to make a difference in your community.</p>
@@ -12,4 +11,33 @@
             Join as Volunteer
         </button>
     </a>
+
+    <div class="container fade-in case-summary">
+        <h2>Welcome, {{ Auth::user()->name }}</h2>
+        <p>Here's an overview of cases near your area (within 100km).</p>
+
+        <div class="case-status-row">
+            <div class="status-box active">
+                <h2>Active</h2>
+                <p class="count">{{ $statusCounts['active'] }}</p>
+            </div>
+
+            <div class="status-box investigation">
+                <h2>Under Investigation</h2>
+                <p class="count">{{ $statusCounts['under_investigation'] }}</p>
+            </div>
+
+            <div class="status-box resolved">
+                <h2>Resolved</h2>
+                <p class="count">{{ $statusCounts['resolved'] }}</p>
+            </div>
+
+            <div class="status-box closed">
+                <h2>Closed</h2>
+                <p class="count">{{ $statusCounts['closed'] }}</p>
+            </div>
+        </div>
+    </div>
+
+
 @endsection

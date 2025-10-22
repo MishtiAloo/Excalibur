@@ -100,7 +100,6 @@ class VolunteerController extends Controller
         })
         ->with('caseFile')
         ->get();
-
         return view('volunteers.dashboard', compact('activeCases', 'assignedSearchGroups')); 
     }
 }

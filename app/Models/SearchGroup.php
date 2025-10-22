@@ -32,10 +32,7 @@ class SearchGroup extends Model
         return $this->belongsToMany(Volunteer::class, 'group_members', 'group_id', 'volunteer_id')->withTimestamps();
     }
 
-    public function resourceBookings()
-    {
-        return $this->hasMany(ResourceBooking::class, 'group_id');
-    }
+    // ResourceBooking relationship removed — ResourceBooking model deprecated.
 
     public function reports()
     {
