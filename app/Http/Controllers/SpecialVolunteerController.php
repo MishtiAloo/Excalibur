@@ -49,7 +49,7 @@ class SpecialVolunteerController extends Controller
             $data['vetting_status'] = 'rejected';
         }
 
-        // ✅ Update role
+        // Update role
         if ($special_volunteer->volunteer->user) {
             $special_volunteer->volunteer->user->role = 'specialVolunteer';
             $special_volunteer->volunteer->user->save();

@@ -56,10 +56,12 @@
         
 
         <div style="margin-top:12px;"></div>
-    <label style="display:block;">Attach Images</label>
-    <button type="button" id="addReportImageBtn" style="background:#6b7280; color:#fff; padding:6px 10px; border:none; border-radius:6px; cursor:pointer;">+ Add Image(s)</button>
-    <input type="file" id="images" name="images[]" accept="image/*" multiple style="display:none;" />
-    <div id="imagesList" style="display:flex; flex-direction:column; gap:10px; margin-top:10px;"></div>
+        <label style="display:block;">Attach Images</label>
+        <button type="button" id="addReportImageBtn" style="background:#6b7280; color:#fff; padding:6px 10px; border:none; border-radius:6px; cursor:pointer;">
+            + Add Image(s)
+        </button>
+        <input type="file" id="images" name="images[]" accept="image/*" multiple style="display:none;" />
+        <div id="imagesList" style="display:flex; flex-direction:column; gap:10px; margin-top:10px;"></div>
 
         <div style="margin-top:12px;">
             <button type="submit" style="background:#3b82f6; color:#fff; padding:8px 14px; border:none; border-radius:6px; cursor:pointer;">Submit Report</button>
@@ -130,7 +132,7 @@
             },
         });
 
-        // 📍 Click to add or move report marker
+        // Click to add or move report marker
         map.addListener('click', (e) => {
             const lat = e.latLng.lat();
             const lng = e.latLng.lng();
@@ -153,7 +155,7 @@
     }
 </script>
 <script>
-    // Robust multi-image accumulation for report images
+    // multi-image accumulation for report images
     const addBtn = document.getElementById('addReportImageBtn');
     const imagesInput = document.getElementById('images');
     const imagesList = document.getElementById('imagesList');

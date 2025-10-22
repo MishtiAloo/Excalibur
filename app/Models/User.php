@@ -81,9 +81,6 @@ class User extends Authenticatable
         return $this->hasMany(Report::class);
     }
 
-    // ResourceBooking relation removed — ResourceBooking model was deprecated. If you re-add
-    // ResourceBooking, restore this relation.
-
     public function notifications()
     {
         return $this->hasMany(Notification::class);

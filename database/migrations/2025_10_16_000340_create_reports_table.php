@@ -14,8 +14,8 @@ return new class extends Migration {
             $table->unsignedBigInteger('user_id');
             $table->string('report_type'); // evidence/sighting/general
             $table->text('description')->nullable();
-            $table->decimal('location_lat', 10, 7)->nullable();
-            $table->decimal('location_lng', 10, 7)->nullable();
+            $table->decimal('location_lat', 10, 7);
+            $table->decimal('location_lng', 10, 7);
             $table->string('sighted_person')->nullable();
             $table->timestamp('reported_at')->nullable();
             $table->string('status')->default('pending'); // pending/verified/responded/falsed/dismissed

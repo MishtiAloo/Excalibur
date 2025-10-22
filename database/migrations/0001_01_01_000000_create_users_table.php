@@ -25,10 +25,10 @@ return new class extends Migration
             $table->unsignedTinyInteger('info_credibility')->default(0);
             $table->unsignedTinyInteger('responsiveness')->default(0);
             // Locations stored as lat/lng pairs
-            $table->decimal('permanent_lat', 10, 7)->nullable();
-            $table->decimal('permanent_lng', 10, 7)->nullable();
-            $table->decimal('current_lat', 10, 7)->nullable();
-            $table->decimal('current_lng', 10, 7)->nullable();
+            $table->decimal('permanent_lat', 10, 7);
+            $table->decimal('permanent_lng', 10, 7);
+            $table->decimal('current_lat', 10, 7);
+            $table->decimal('current_lng', 10, 7);
             $table->rememberToken();
             $table->timestamps();
         });

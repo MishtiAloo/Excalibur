@@ -145,16 +145,7 @@
             <p style="color:#9ca3af;">No images attached to this case.</p>
         @endif
 
-        @if (Auth::user()->role === 'officer' || Auth::user()->role === 'admin')
-        <form method="POST" action="{{ route('cases.media.store', $case->case_id) }}" enctype="multipart/form-data" style="margin-top: 10px;">
-            @csrf
-            <label style="display:block; color:#e5e7eb; margin-bottom:6px;">Add Case Images</label>
-            <button type="button" id="addCaseImageBtn" style="background:#6b7280; color:#fff; padding:6px 10px; border:none; border-radius:6px; cursor:pointer;">+ Add Image(s)</button>
-            <input type="file" id="caseImages" name="images[]" accept="image/*" multiple style="display:none;" />
-            <div id="caseImagesList" style="display:flex; flex-direction:column; gap:10px; margin-top:10px;"></div>
-            <button type="submit" style="margin-top:8px; background:#3b82f6; color:#fff; padding:8px 12px; border:none; border-radius:6px;">Upload</button>
-        </form>
-        @endif
+        
 </div>
 @endsection
 
@@ -242,94 +233,6 @@
         });
     }
 </script>
-<script>
-    // Multi-image accumulation for case media upload
-    const addCaseBtn = document.getElementById('addCaseImageBtn');
-    const caseImagesInput = document.getElementById('caseImages');
-    const caseImagesList = document.getElementById('caseImagesList');
-    if (addCaseBtn && caseImagesInput && caseImagesList) {
-        let dtCase = new DataTransfer();
-        const descMapCase = new Map();
-        const keyOf = (f) => `${f.name}__${f.lastModified}`;
-
-        function rebuildCaseList() {
-            caseImagesList.innerHTML = '';
-            Array.from(dtCase.files).forEach((file, idx) => {
-                const key = keyOf(file);
-                const row = document.createElement('div');
-                row.style.display = 'grid';
-                row.style.gridTemplateColumns = '120px 1fr auto';
-                row.style.gap = '10px';
-                row.style.alignItems = 'center';
-                row.style.border = '1px solid #e5e7eb';
-                row.style.borderRadius = '8px';
-                row.style.padding = '10px';
-
-                const img = document.createElement('img');
-                img.style.width = '120px';
-                img.style.height = '90px';
-                img.style.objectFit = 'cover';
-                const fr = new FileReader();
-                fr.onload = e => img.src = e.target.result;
-                fr.readAsDataURL(file);
-                row.appendChild(img);
-
-                const right = document.createElement('div');
-                const label = document.createElement('label');
-                label.textContent = file.name;
-                label.style.display = 'block';
-                label.style.color = '#6b7280';
-                const ta = document.createElement('textarea');
-                ta.name = 'image_descriptions[]';
-                ta.rows = 2;
-                ta.placeholder = 'Optional description...';
-                ta.style.width = '100%';
-                if (descMapCase.has(key)) ta.value = descMapCase.get(key);
-                ta.addEventListener('input', () => descMapCase.set(key, ta.value));
-                right.appendChild(label);
-                right.appendChild(ta);
-                row.appendChild(right);
-
-                const actions = document.createElement('div');
-                const rm = document.createElement('button');
-                rm.type = 'button';
-                rm.textContent = 'Remove';
-                rm.style.backgroundColor = '#ef4444';
-                rm.style.color = '#fff';
-                rm.style.border = 'none';
-                rm.style.padding = '6px 10px';
-                rm.style.borderRadius = '6px';
-                rm.addEventListener('click', () => removeAtCase(idx));
-                actions.appendChild(rm);
-                row.appendChild(actions);
-
-                caseImagesList.appendChild(row);
-            });
-            caseImagesInput.files = dtCase.files;
-        }
-
-        function removeAtCase(i) {
-            const cur = Array.from(dtCase.files);
-            const nd = new DataTransfer();
-            cur.forEach((f, idx) => {
-                if (idx !== i) nd.items.add(f);
-                else descMapCase.delete(keyOf(f));
-            });
-            dtCase = nd;
-            rebuildCaseList();
-        }
-
-        addCaseBtn.addEventListener('click', () => caseImagesInput.click());
-        caseImagesInput.addEventListener('change', () => {
-            const fresh = Array.from(caseImagesInput.files || []);
-            fresh.forEach(f => {
-                const exists = Array.from(dtCase.files).some(df => keyOf(df) === keyOf(f));
-                if (!exists) dtCase.items.add(f);
-            });
-            caseImagesInput.value = '';
-            rebuildCaseList();
-        });
-    }
-</script>
+<!-- Image upload UI removed from details view; available on Edit Case page -->
 @endsection
 

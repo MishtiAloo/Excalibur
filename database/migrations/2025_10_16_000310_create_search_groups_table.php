@@ -17,12 +17,12 @@ return new class extends Migration {
             $table->dateTime('start_time')->nullable();
             $table->unsignedInteger('duration')->nullable(); // minutes
             $table->dateTime('report_back_time')->nullable();
-            $table->unsignedInteger('max_volunteers')->nullable();
-            $table->unsignedInteger('available_volunteer_slots')->nullable();
+            $table->unsignedInteger('max_volunteers');
+            $table->unsignedInteger('available_volunteer_slots');
             $table->string('instruction')->nullable();
-            $table->decimal('allocated_lat', 10, 7)->nullable();
-            $table->decimal('allocated_lng', 10, 7)->nullable();
-            $table->unsignedInteger('radius')->nullable();
+            $table->decimal('allocated_lat', 10, 7);
+            $table->decimal('allocated_lng', 10, 7);
+            $table->unsignedInteger('radius');
             $table->timestamps();
 
             $table->foreign('case_id')->references('case_id')->on('cases')->cascadeOnDelete();

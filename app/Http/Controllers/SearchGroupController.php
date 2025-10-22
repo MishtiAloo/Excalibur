@@ -85,6 +85,7 @@ class SearchGroupController extends Controller
     public function show(SearchGroup $search_group)
     {
         $search_group->load(['caseFile','leader','volunteers.user','reports.user']);
+        
         if (Auth::check() && Auth::user()->role === 'officer') {
             return view('officers.viewSearchGroup', ['group' => $search_group]);
         }
@@ -163,8 +164,8 @@ class SearchGroupController extends Controller
             ->with('caseFile')
             ->get();
 
-    $activeSearchGroups = $assignedSearchGroups->where('status', 'active');
-    return view('leaders.dashboard', compact('assignedSearchGroups', 'activeSearchGroups'));
+        $activeSearchGroups = $assignedSearchGroups->where('status', 'active');
+        return view('leaders.dashboard', compact('assignedSearchGroups', 'activeSearchGroups'));
     }
 
     // Start the search for a specific search group
