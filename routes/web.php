@@ -38,6 +38,11 @@ Route::post('/login', [UserController::class, 'login'])->name('login.submit');
 Route::post('/logout', [UserController::class, 'logout'])->name('logout');  
 Route::get('/signupform', [UserController::class, 'showSignupForm'])->name('signupform');
 Route::post('/signup', [UserController::class, 'store'])->name('signup');
+// password reset (simple email + new password form, no email token flow)
+Route::middleware('guest')->group(function () {
+    Route::get('/password/reset', [UserController::class, 'showResetForm'])->name('password.request');
+    Route::post('/password/reset', [UserController::class, 'resetPassword'])->name('password.update');
+});
 
 
 // dashboard routes (protected by auth + role)
@@ -96,7 +101,11 @@ Route::post('/search-group/{search_group}/reports/submit', [ReportController::cl
 
 // Alert routes
 Route::get('/alerts/create/case/{case}', [AlertController::class, 'showCreateFormForCase'])->name('alerts.create.case');
-Route::get('/alerts/nearby', [AlertController::class, 'nearbyAlerts'])->name('alerts.nearby');
+//alert nearby should be auth protected
+Route::middleware('auth')->group(function () {
+    Route::get('/alerts/nearby', [AlertController::class, 'nearbyAlerts'])->name('alerts.nearby');
+});
+
 Route::resource('alerts', AlertController::class)->names('alerts');
 
 // Contact page

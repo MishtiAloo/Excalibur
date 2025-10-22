@@ -18,7 +18,11 @@
     {{-- Navbar based on app.css styles --}}
     <nav class="navbar">
         <div class="container">
-            <a href="{{ url('/') }}" class="navbar-brand">Excalibur</a>
+            <div style="display: flex; flex-direction: row; align-items: center; gap: 10px;">
+                <img src="{{ asset('videos/logo.gif') }}" alt="Logo" style="height: 60px; width: auto;">
+                <a href="{{ url('/') }}" class="navbar-brand">Excalibur</a>
+            </div>
+
             <ul class="navbar-nav">
                 <li><a href="{{ route('dashboardRouting') }}">Home</a></li>
                 <li><a href="{{ route('alerts.nearby') }}">Alerts</a></li>
@@ -29,10 +33,10 @@
             @guest
                 <div>
                     <form method="GET" style="all: unset;" action="{{ route('login') }}">
-                        <button type="submit" style="background-color: rgb(90, 90, 233)">Login</button>
+                        <button type="submit" style="background-color: rgb(82, 121, 218)">Login</button>
                     </form>
                     <form method="GET" style="all: unset;" action="{{ route('signupform') }}">
-                        <button type="submit" style="background-color: rgb(48, 221, 48)">SignUp</button>
+                        <button type="submit" style="background-color: rgb(227, 230, 51)">SignUp</button>
                     </form>
                 </div>
 

@@ -3,8 +3,12 @@
 @section('title', 'Welcome')
 
 @section('content')
-    <h1>helo</h1>
-    <h2>Welcome officer</h2>
+    <!-- Welcome Card -->
+    <div style="background:#282a3a; color: #fff; border-radius: 12px; padding: 20px; margin-bottom: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+        <h1 style="margin: 0 0 10px;">Hello, {{ Auth::user()->name ?? 'Volunteer' }}!</h1>
+        <h2 style="margin: 0; font-weight: normal; color:#fff">Welcome back to your dashboard</h2>
+        <p style="margin-top: 10px; font-size: 14px; opacity: 0.9;">Here you can see verify volunteers applications, manage active case and alerts.</p>
+    </div>
 
     {{-- table for pending volunteer applications --}}
     <h2>Pending Volunteer Applications</h2>

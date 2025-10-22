@@ -22,7 +22,7 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:4',
-            'nid' => 'nullable|string|max:32',
+            'nid' => 'required|string|max:32',
             'phone' => 'nullable|string|max:32',
             'role' => 'nullable|string|in:citizen,officer,volunteer,specialVolunteer,watchDog,group_leader',
             'status' => 'nullable|string|in:active,suspended,inactive',
@@ -34,8 +34,11 @@ class UserController extends Controller
             'current_lng' => 'nullable|numeric|between:-180,180',
         ]);
 
+
         try {
             $data['password'] = Hash::make($data['password']);
+            $data['info_credibility'] = $data['info_credibility'] ?? 50;
+            $data['responsiveness'] = $data['responsiveness'] ?? 50;
 
             $user = User::create($data);
             return redirect()->route('login')->with('success', 'Account created successfully!');
@@ -149,6 +152,32 @@ class UserController extends Controller
     public function showSignupForm()
     {
         return view('auth.signup');
+    }
+
+    // Show simple password reset form (no email token flow)
+    public function showResetForm()
+    {
+        return view('auth.reset-password');
+    }
+
+    // Handle password reset by email (updates password directly)
+    public function resetPassword(Request $request)
+    {
+        $data = $request->validate([
+            'email' => 'required|email',
+            'new_password' => 'required|string|min:8|confirmed',
+        ]);
+
+        $user = User::where('email', $data['email'])->first();
+
+        if (!$user) {
+            return back()->withErrors(['email' => 'No account found with that email.'])->withInput();
+        }
+
+        $user->password = Hash::make($data['new_password']);
+        $user->save();
+
+        return redirect()->route('login')->with('success', 'Password updated successfully. Please log in with your new password.');
     }
 
     public function showProfile()
