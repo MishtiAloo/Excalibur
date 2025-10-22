@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\{User, Officer, Volunteer, SpecialVolunteer, CaseFile, SearchGroup, Report, MediaReport, Alert, Notification};
+use App\Models\{User, Officer, Volunteer, SpecialVolunteer, CaseFile, SearchGroup, Report, MediaReport, Alert, Notification, MediaCase};
 
 class DatabaseSeeder extends Seeder
 {
@@ -97,6 +97,14 @@ class DatabaseSeeder extends Seeder
         foreach ($reports as $report) {
             MediaReport::factory()->create([
                 'report_id' => $report->report_id,
+                'uploaded_by' => $users->random()->id,
+            ]);
+        }
+
+        // Case media
+        foreach ($cases as $case) {
+            MediaCase::factory(2)->create([
+                'case_id' => $case->case_id,
                 'uploaded_by' => $users->random()->id,
             ]);
         }

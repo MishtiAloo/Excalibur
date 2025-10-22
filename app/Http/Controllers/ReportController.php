@@ -123,6 +123,10 @@ class ReportController extends Controller
             'location_lng' => 'nullable|numeric|between:-180,180',
             'sighted_person' => 'nullable|string|max:255',
             'user_id' => 'required|exists:users,id',
+            'images' => 'sometimes',
+            'images.*' => 'image|max:5120',
+            'image_descriptions' => 'array',
+            'image_descriptions.*' => 'nullable|string',
         ]);
 
         $payload = array_merge([
@@ -133,6 +137,29 @@ class ReportController extends Controller
         ], $data);
 
         $report = Report::create($payload);
+
+        // Handle local image uploads to media_reports
+        if ($request->hasFile('images')) {
+            $files = $request->file('images');
+            if ($files instanceof \Illuminate\Http\UploadedFile) {
+                $files = [$files];
+            } elseif (!is_array($files)) {
+                $files = [];
+            }
+            $descs = $request->input('image_descriptions', []);
+            foreach ($files as $i => $file) {
+                if (!$file || !$file->isValid()) continue;
+                $path = $file->store('report-images/'.$report->report_id, 'public');
+                $url = \Illuminate\Support\Facades\Storage::url($path);
+                \App\Models\MediaReport::create([
+                    'report_id' => $report->report_id,
+                    'uploaded_by' => $data['user_id'],
+                    'url' => $url,
+                    'description' => $descs[$i] ?? null,
+                ]);
+            }
+        }
+
         return redirect()->route('search_groups.show', $group->group_id)->with('success', 'Report filed successfully');
     }
 }

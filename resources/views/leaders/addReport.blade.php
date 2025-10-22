@@ -5,7 +5,7 @@
 @section('content')
     <h2>Add a new Report</h2>
     {{-- form to add a new report --}}
-    <form method="POST" action="{{ route('reports.add', $group->group_id) }}">
+    <form method="POST" action="{{ route('reports.add', $group->group_id) }}" enctype="multipart/form-data">
         @csrf
 
     <input type="hidden" name="case_id" value="{{ $case->case_id }}">
@@ -54,6 +54,12 @@
         <input type="hidden" id="group_radius" value="{{ $group->radius }}">
 
         
+
+        <div style="margin-top:12px;"></div>
+    <label style="display:block;">Attach Images</label>
+    <button type="button" id="addReportImageBtn" style="background:#6b7280; color:#fff; padding:6px 10px; border:none; border-radius:6px; cursor:pointer;">+ Add Image(s)</button>
+    <input type="file" id="images" name="images[]" accept="image/*" multiple style="display:none;" />
+    <div id="imagesList" style="display:flex; flex-direction:column; gap:10px; margin-top:10px;"></div>
 
         <div style="margin-top:12px;">
             <button type="submit" style="background:#3b82f6; color:#fff; padding:8px 14px; border:none; border-radius:6px; cursor:pointer;">Submit Report</button>
@@ -145,5 +151,93 @@
             });
         });
     }
+</script>
+<script>
+    // Robust multi-image accumulation for report images
+    const addBtn = document.getElementById('addReportImageBtn');
+    const imagesInput = document.getElementById('images');
+    const imagesList = document.getElementById('imagesList');
+    let dt = new DataTransfer();
+    const descMap = new Map();
+
+    function keyOf(f) { return `${f.name}__${f.lastModified}`; }
+
+    function rebuildReportImages() {
+        imagesList.innerHTML = '';
+        Array.from(dt.files).forEach((file, idx) => {
+            const key = keyOf(file);
+            const row = document.createElement('div');
+            row.style.display = 'grid';
+            row.style.gridTemplateColumns = '120px 1fr auto';
+            row.style.gap = '10px';
+            row.style.alignItems = 'center';
+            row.style.border = '1px solid #e5e7eb';
+            row.style.borderRadius = '8px';
+            row.style.padding = '10px';
+
+            const img = document.createElement('img');
+            img.style.width = '120px';
+            img.style.height = '90px';
+            img.style.objectFit = 'cover';
+            const fr = new FileReader();
+            fr.onload = e => img.src = e.target.result;
+            fr.readAsDataURL(file);
+            row.appendChild(img);
+
+            const right = document.createElement('div');
+            const label = document.createElement('label');
+            label.textContent = file.name;
+            label.style.display = 'block';
+            label.style.color = '#6b7280';
+            const ta = document.createElement('textarea');
+            ta.name = 'image_descriptions[]';
+            ta.rows = 2;
+            ta.placeholder = 'Optional description...';
+            ta.style.width = '100%';
+            if (descMap.has(key)) ta.value = descMap.get(key);
+            ta.addEventListener('input', () => descMap.set(key, ta.value));
+            right.appendChild(label);
+            right.appendChild(ta);
+            row.appendChild(right);
+
+            const actions = document.createElement('div');
+            const rm = document.createElement('button');
+            rm.type = 'button';
+            rm.textContent = 'Remove';
+            rm.style.backgroundColor = '#ef4444';
+            rm.style.color = '#fff';
+            rm.style.border = 'none';
+            rm.style.padding = '6px 10px';
+            rm.style.borderRadius = '6px';
+            rm.addEventListener('click', () => removeAt(idx));
+            actions.appendChild(rm);
+            row.appendChild(actions);
+
+            imagesList.appendChild(row);
+        });
+        imagesInput.files = dt.files;
+    }
+
+    function removeAt(i) {
+        const cur = Array.from(dt.files);
+        const nd = new DataTransfer();
+        cur.forEach((f, idx) => {
+            if (idx !== i) nd.items.add(f);
+            else descMap.delete(keyOf(f));
+        });
+        dt = nd;
+        rebuildReportImages();
+    }
+
+    addBtn?.addEventListener('click', () => imagesInput?.click());
+    imagesInput?.addEventListener('change', () => {
+        const fresh = Array.from(imagesInput.files || []);
+        fresh.forEach(f => {
+            const exists = Array.from(dt.files).some(df => keyOf(df) === keyOf(f));
+            if (!exists) dt.items.add(f);
+        });
+        imagesInput.value = '';
+        rebuildReportImages();
+    });
 </script>
 @endsection

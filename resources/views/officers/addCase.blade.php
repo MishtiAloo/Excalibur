@@ -24,7 +24,7 @@
             </div>
         @endif
 
-        <form method="POST" action="{{ route('cases.store') }}">
+    <form method="POST" action="{{ route('cases.store') }}" enctype="multipart/form-data">
             @csrf
 
             <input type="hidden" name="created_by" value="{{ auth()->user()->id }}">
@@ -63,6 +63,14 @@
                 <option value="critical">Critical</option>
                 <option value="national">National</option>
             </select>
+
+            <hr style="margin:18px 0;" />
+
+            <h3>Case Images</h3>
+            <p style="color:#9ca3af; margin:6px 0 10px;">Click add and select images; you can add more repeatedly and write a description for each.</p>
+            <button type="button" id="addCaseFormImageBtn" style="background:#6b7280; color:#fff; padding:6px 10px; border:none; border-radius:6px; cursor:pointer;">+ Add Image(s)</button>
+            <input type="file" id="imagesInput" name="images[]" accept="image/*" multiple style="display:none;" />
+            <div id="imagesMeta" style="margin-top:10px; display:flex; flex-direction:column; gap:10px;"></div>
 
             <button type="submit">Submit Case</button>
         </form>
@@ -140,6 +148,95 @@
                 strokeColor: "#2563eb",
                 strokeWeight: 2,
             });
+        });
+    }
+</script>
+<script>
+    // Multi-image accumulation with per-image descriptions for Add Case
+    const addBtn = document.getElementById('addCaseFormImageBtn');
+    const imagesInput = document.getElementById('imagesInput');
+    const imagesMeta = document.getElementById('imagesMeta');
+    if (addBtn && imagesInput && imagesMeta) {
+        let dt = new DataTransfer();
+        const descMap = new Map();
+        const keyOf = (f) => `${f.name}__${f.lastModified}`;
+
+        function rebuildList() {
+            imagesMeta.innerHTML = '';
+            Array.from(dt.files).forEach((file, idx) => {
+                const key = keyOf(file);
+                const row = document.createElement('div');
+                row.style.display = 'grid';
+                row.style.gridTemplateColumns = '120px 1fr auto';
+                row.style.gap = '10px';
+                row.style.alignItems = 'center';
+                row.style.border = '1px solid #e5e7eb';
+                row.style.borderRadius = '8px';
+                row.style.padding = '10px';
+
+                const img = document.createElement('img');
+                img.style.width = '120px';
+                img.style.height = '90px';
+                img.style.objectFit = 'cover';
+                const fr = new FileReader();
+                fr.onload = e => img.src = e.target.result;
+                fr.readAsDataURL(file);
+                row.appendChild(img);
+
+                const right = document.createElement('div');
+                const label = document.createElement('label');
+                label.textContent = file.name;
+                label.style.display = 'block';
+                label.style.color = '#6b7280';
+                const ta = document.createElement('textarea');
+                ta.name = 'image_descriptions[]';
+                ta.rows = 2;
+                ta.placeholder = 'Optional description...';
+                ta.style.width = '100%';
+                if (descMap.has(key)) ta.value = descMap.get(key);
+                ta.addEventListener('input', () => descMap.set(key, ta.value));
+                right.appendChild(label);
+                right.appendChild(ta);
+                row.appendChild(right);
+
+                const actions = document.createElement('div');
+                const rm = document.createElement('button');
+                rm.type = 'button';
+                rm.textContent = 'Remove';
+                rm.style.backgroundColor = '#ef4444';
+                rm.style.color = '#fff';
+                rm.style.border = 'none';
+                rm.style.padding = '6px 10px';
+                rm.style.borderRadius = '6px';
+                rm.addEventListener('click', () => removeAt(idx));
+                actions.appendChild(rm);
+                row.appendChild(actions);
+
+                imagesMeta.appendChild(row);
+            });
+            imagesInput.files = dt.files;
+        }
+
+        function removeAt(i) {
+            const cur = Array.from(dt.files);
+            const nd = new DataTransfer();
+            cur.forEach((f, idx) => {
+                if (idx !== i) nd.items.add(f);
+                else descMap.delete(keyOf(f));
+            });
+            dt = nd;
+            rebuildList();
+        }
+
+        addBtn.addEventListener('click', () => imagesInput.click());
+        imagesInput.addEventListener('change', () => {
+            const fresh = Array.from(imagesInput.files || []);
+            fresh.forEach(f => {
+                const exists = Array.from(dt.files).some(df => keyOf(df) === keyOf(f));
+                if (!exists) dt.items.add(f);
+            });
+            imagesInput.value = '';
+            rebuildList();
         });
     }
 </script>

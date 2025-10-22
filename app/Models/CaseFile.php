@@ -30,6 +30,11 @@ class CaseFile extends Model
         return $this->hasMany(Report::class, 'case_id');
     }
 
+    public function mediaCases()
+    {
+        return $this->hasMany(MediaCase::class, 'case_id', 'case_id');
+    }
+
 
     public function alerts()
     {

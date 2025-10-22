@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\{UserController, CaseFileController, SearchGroupController, GroupMemberController, ReportController, OfficerController, VolunteerController, SpecialVolunteerController, AlertController, ImageController, MediaReportController, NotificationController, officerDashboardController};
+use App\Http\Controllers\{UserController, CaseFileController, SearchGroupController, GroupMemberController, ReportController, OfficerController, VolunteerController, SpecialVolunteerController, AlertController, ImageController, MediaReportController, NotificationController, officerDashboardController, MediaCaseController};
 
 Route::get('/', function () {
     return view('welcome');
@@ -23,6 +23,10 @@ Route::resource('volunteers', VolunteerController::class)->names('volunteers');
 Route::resource('special-volunteers', SpecialVolunteerController::class)->parameters(['special-volunteers' => 'special_volunteer'])->names('special_volunteers');
 // Alert resource is registered after custom routes to avoid parameter route conflicts
 Route::resource('media-reports', MediaReportController::class)->parameters(['media-reports' => 'media_report'])->names('media_reports');
+
+// Case media (images attached directly to cases)
+Route::post('/cases/{case}/media', [MediaCaseController::class, 'store'])->name('cases.media.store');
+Route::delete('/media-cases/{mediaCase}', [MediaCaseController::class, 'destroy'])->name('media_cases.destroy');
 // ResourceItem and ResourceBooking routes removed — these models/controllers were deprecated.
 // If you plan to delete their files, it's now safe to remove them completely from the project.
 Route::resource('notifications', NotificationController::class)->names('notifications');
